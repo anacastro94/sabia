@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "624376713696",
+    "project_id": "bbk-final-project",
+    "storage_bucket": "bbk-final-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624376713696:android:f5afa3532cd94cdd1bdb85",
+        "android_client_info": {
+          "package_name": "bbk.student.anacastro.bbk_final_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624376713696-faedf6a6mom8qt92sjg8jhevqv34mlch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC36uXxZkk0p9H8Eqn9GYJgGWHrTaazedo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624376713696-faedf6a6mom8qt92sjg8jhevqv34mlch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
