@@ -1,3 +1,4 @@
+import 'package:bbk_final_ana/common/widgets/drawer_menu.dart';
 import 'package:flutter/material.dart';
 
 class ScreenBasicStructure extends StatelessWidget {
@@ -16,6 +17,7 @@ class ScreenBasicStructure extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
+      endDrawer: const DrawerMenu(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),

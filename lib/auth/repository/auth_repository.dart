@@ -106,11 +106,14 @@ class AuthRepository {
 
   void logCurrentUserOut(BuildContext context) async {
     try {
-      await auth.signOut().then(
+      await firestore.collection('users').doc(auth.currentUser!.uid).update({
+        'isOnline': false,
+      }).then((value) => auth.signOut().then(
             (_) => Navigator.pushNamedAndRemoveUntil(
                 context, WelcomeScreen.id, (route) => false),
-          );
+          ));
     } on Exception catch (e) {
+      setUserState(true);
       showSnackBar(context: context, content: e.toString());
     }
   }

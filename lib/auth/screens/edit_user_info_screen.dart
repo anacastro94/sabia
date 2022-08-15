@@ -10,19 +10,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/widgets/screen_basic_structure.dart';
 import '../../screens/home_screen.dart';
 
-class UserInformationScreen extends ConsumerStatefulWidget {
-  const UserInformationScreen({Key? key}) : super(key: key);
-  static const String id = '/user-information';
+class EditUserInformationScreen extends ConsumerStatefulWidget {
+  const EditUserInformationScreen({Key? key}) : super(key: key);
+  static const String id = '/edit-user-information';
 
   @override
-  ConsumerState<UserInformationScreen> createState() =>
-      _UserInformationScreenState();
+  ConsumerState<EditUserInformationScreen> createState() =>
+      _EditUserInformationScreenState();
 }
 
-class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
+class _EditUserInformationScreenState
+    extends ConsumerState<EditUserInformationScreen> {
   final TextEditingController nameController = TextEditingController();
   File? image;
   UserModel? user;
+  bool isEditing = true;
 
   @override
   void initState() {
@@ -38,6 +40,10 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
 
   void getUserData() async {
     user = await ref.read(authControllerProvider).getCurrentUserData();
+    if (user == null) return;
+    isEditing = false;
+    nameController.text = user!.name;
+    setState(() {});
   }
 
   void selectImage() async {
@@ -51,6 +57,8 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
       ref
           .read(authControllerProvider)
           .saveUserDataToFirebase(context, name, image);
+      toggleEditingMode();
+      image = null;
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
           context,
@@ -59,10 +67,20 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     }
   }
 
+  void toggleEditingMode() {
+    setState(() {
+      isEditing = !isEditing;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ScreenBasicStructure(
+      appBar: AppBar(
+        backgroundColor: kGreenOlivine,
+        elevation: 0.0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,11 +88,18 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
           Stack(
             children: [
               image == null
-                  ? const CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
-                      backgroundImage: AssetImage('assets/images/avatar.png'),
-                    )
+                  ? user == null
+                      ? const CircleAvatar(
+                          radius: 60.0,
+                          backgroundColor: kAntiqueWhite,
+                          backgroundImage:
+                              AssetImage('assets/images/avatar.png'),
+                        )
+                      : CircleAvatar(
+                          radius: 60.0,
+                          backgroundColor: kAntiqueWhite,
+                          backgroundImage: NetworkImage(user!.profilePicture),
+                        )
                   : CircleAvatar(
                       radius: 60.0,
                       backgroundColor: kAntiqueWhite,
@@ -83,14 +108,16 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
               Positioned(
                 bottom: -12.0,
                 left: 66.0,
-                child: IconButton(
-                  onPressed: selectImage,
-                  icon: const Icon(
-                    Icons.add_a_photo,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                ),
+                child: isEditing
+                    ? IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                      )
+                    : Container(),
               ),
             ],
           ),
@@ -104,6 +131,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                 width: size.width * 0.85,
                 child: TextFormField(
                   textAlign: TextAlign.center,
+                  enabled: isEditing,
                   controller: nameController,
                   decoration:
                       kTextFieldDecoration.copyWith(hintText: 'Enter you name'),
@@ -117,8 +145,9 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                   radius: 24.0,
                   child: IconButton(
                     color: kAntiqueWhite,
-                    onPressed: () => storeUserData(),
-                    icon: const Icon(Icons.done),
+                    onPressed:
+                        isEditing ? () => storeUserData() : toggleEditingMode,
+                    icon: Icon(isEditing ? Icons.done : Icons.edit),
                   ),
                 ),
               )

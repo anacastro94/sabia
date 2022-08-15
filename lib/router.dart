@@ -10,6 +10,7 @@ import 'package:bbk_final_ana/auth/screens/user_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'auth/screens/edit_user_info_screen.dart';
 import 'auth/screens/registration_screen.dart';
 import 'messaging/select_contacts/screens/select_contact_screen.dart';
 
@@ -32,6 +33,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case UserInformationScreen.id:
       return MaterialPageRoute(
           builder: (context) => const UserInformationScreen());
+
+    case EditUserInformationScreen.id:
+      return MaterialPageRoute(
+          builder: (context) => const EditUserInformationScreen());
 
     case SelectContactScreen.id:
       return MaterialPageRoute(

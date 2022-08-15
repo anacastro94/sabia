@@ -1,10 +1,9 @@
-import 'package:bbk_final_ana/auth/screens/user_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../auth/screens/edit_user_info_screen.dart';
 import '../common/widgets/cloud_record_list_view.dart';
 import '../common/widgets/feature_buttons_view.dart';
-import '../audio/screens/initial_decision_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             CircleAvatar(
               child: IconButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, UserInformationScreen.id),
+                  onPressed: () => Navigator.pushNamed(
+                      context, EditUserInformationScreen.id),
                   icon: const Icon(Icons.account_circle_rounded)),
             )
           ],

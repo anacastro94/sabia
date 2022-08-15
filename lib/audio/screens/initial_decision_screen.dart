@@ -13,6 +13,10 @@ class InitialDecisionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenBasicStructure(
+      appBar: AppBar(
+        backgroundColor: kGreenOlivine,
+        elevation: 0.0,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

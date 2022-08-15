@@ -1,3 +1,4 @@
+import 'package:bbk_final_ana/auth/screens/user_info_screen.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:bbk_final_ana/common/widgets/rounded_button_primary.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
@@ -53,7 +54,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
       return;
     }
     if (!mounted) return;
-    Navigator.pushNamed(context, InitialDecisionScreen.id);
+    Navigator.pushNamedAndRemoveUntil(
+        context, UserInformationScreen.id, (route) => false);
   }
 
   @override
