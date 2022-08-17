@@ -19,7 +19,21 @@ class SelectContactRepository {
     List<Contact> contacts = [];
     try {
       if (await FlutterContacts.requestPermission()) {
-        contacts = await FlutterContacts.getContacts(withProperties: true);
+        var allDeviceContacts =
+            await FlutterContacts.getContacts(withProperties: true);
+        var userCollection = await firestore.collection('users').get();
+        for (var document in userCollection.docs) {
+          var userData = UserModel.fromMap(document.data());
+          String registeredEmail = userData.email;
+
+          contacts.addAll(allDeviceContacts.where((contact) {
+            List<String> emailAddresses = [];
+            for (var email in contact.emails) {
+              emailAddresses.add(email.address);
+            }
+            return emailAddresses.contains(registeredEmail);
+          }));
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -31,20 +45,21 @@ class SelectContactRepository {
     try {
       var userCollection = await firestore.collection('users').get();
       bool isFound = false;
-      print('USER COLLECTION SIZE: ${userCollection.size}');
       for (var document in userCollection.docs) {
         var userData = UserModel.fromMap(document.data());
         String selectedEmail = selectedContact.emails[0].address;
-        // print('SELECTED EMAIL DEBUG: $selectedEmail');
-        // print('IS USER REGISTERED?: ${selectedEmail == userData.email}');
         if (selectedEmail == userData.email) {
           isFound = true;
-          Navigator.pushNamed(context, ChatScreen.id, arguments: {
-            'name': userData.name,
-            'uid': userData.uid,
-            'isGroupChat': false,
-            'profilePicture': userData.profilePicture,
-          });
+          Navigator.pushNamedAndRemoveUntil(
+              context,
+              ChatScreen.id,
+              arguments: {
+                'name': userData.name,
+                'uid': userData.uid,
+                'isGroupChat': false,
+                'profilePicture': userData.profilePicture,
+              },
+              (route) => false);
         }
       }
       if (!isFound) {

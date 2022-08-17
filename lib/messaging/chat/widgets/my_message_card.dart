@@ -34,12 +34,13 @@ class MyMessageCard extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: ConstrainedBox(
           constraints: BoxConstraints(
+              minWidth: 102.0,
               maxWidth: MediaQuery.of(context).size.width - 45.0),
           child: Card(
             elevation: 1,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(9.0)),
-            color: kGreenOlivine,
+            color: kGreenLight,
             margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
             child: Stack(
               children: [
@@ -64,11 +65,11 @@ class MyMessageCard extends StatelessWidget {
                           userName,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 3.0),
+                        const SizedBox(height: 6.0),
                         Container(
                           padding: const EdgeInsets.all(9.0),
                           decoration: BoxDecoration(
-                            color: kAntiqueWhite.withOpacity(0.5),
+                            color: Colors.white.withOpacity(0.75),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(6.0)),
                           ),
@@ -92,14 +93,14 @@ class MyMessageCard extends StatelessWidget {
                         date,
                         style: const TextStyle(
                           fontSize: 13.0,
-                          color: kAntiqueWhite,
+                          color: kGrey,
                         ),
                       ),
                       const SizedBox(width: 5.0),
                       Icon(
                         isSeen ? Icons.done_all : Icons.done,
                         size: 20.0,
-                        color: isSeen ? Colors.blue : kAntiqueWhite,
+                        color: isSeen ? Colors.blue : kGrey,
                       ),
                     ],
                   ),

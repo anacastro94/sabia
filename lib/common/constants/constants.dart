@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 const String kLogoTag = 'logo';
 
+const Color kGreenLight = Color(0xFFF3F5EC);
 const Color kGreenOlivine = Color(0xFFA7BC79);
 const Color kAntiqueWhite = Color(0xFFFFF0DD);
 const Color kDarkOrange = Color(0xFFFE8900);

@@ -63,64 +63,69 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     return ProgressHUD(
       child: Builder(builder: (context) {
         return ScreenBasicStructure(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                child: Hero(
-                  tag: kLogoTag,
-                  child: Image.asset('assets/images/logo.png'),
-                ),
-              ),
-              const SizedBox(height: 24.0),
-              TextField(
-                controller: emailController,
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Email',
-                ),
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 12.0),
-              TextField(
-                controller: passwordController,
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Password',
-                ),
-                textAlign: TextAlign.center,
-                obscureText: true,
-              ),
-              const SizedBox(height: 12.0),
-              RoundedButtonPrimary(
-                title: 'Sign up',
-                onPressed: () => sendEmailAndPassword(context),
-              ),
-              const SizedBox(height: 12.0),
-              TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: kAntiqueWhite,
-                ),
-                onPressed: () {
-                  //TODO: terms and conditions
-                },
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'By continuing, you agree to the ',
-                    style: TextStyle(
-                      color: kAntiqueWhite,
-                      fontSize: 16.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Flexible(
+                    child: Hero(
+                      tag: kLogoTag,
+                      child: Image.asset('assets/images/logo.png'),
                     ),
-                    children: [
-                      TextSpan(
-                        text: 'Terms and Conditions.',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )
-                    ],
                   ),
-                ),
+                  const SizedBox(height: 24.0),
+                  TextField(
+                    controller: emailController,
+                    decoration: kTextFieldDecoration.copyWith(
+                      hintText: 'Email',
+                    ),
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextField(
+                    controller: passwordController,
+                    decoration: kTextFieldDecoration.copyWith(
+                      hintText: 'Password',
+                    ),
+                    textAlign: TextAlign.center,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 12.0),
+                  RoundedButtonPrimary(
+                    title: 'Sign up',
+                    onPressed: () => sendEmailAndPassword(context),
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: kAntiqueWhite,
+                    ),
+                    onPressed: () {
+                      //TODO: terms and conditions
+                    },
+                    child: RichText(
+                      text: const TextSpan(
+                        text: 'By continuing, you agree to the ',
+                        style: TextStyle(
+                          color: kAntiqueWhite,
+                          fontSize: 16.0,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Terms and Conditions.',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       }),

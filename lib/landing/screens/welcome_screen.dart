@@ -42,87 +42,90 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return ScreenBasicStructure(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Hero(
-                    tag: kLogoTag,
-                    child: Image.asset('assets/images/logo.png')),
-              ),
-              animation.value > 0.6
-                  ? const Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Sabiá',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Hero(
+                      tag: kLogoTag,
+                      child: Image.asset('assets/images/logo.png')),
+                ),
+                animation.value > 0.6
+                    ? const Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Sabiá',
+                          style: TextStyle(
+                            fontSize: 60.0,
+                            fontFamily: 'DancingScript',
+                            color: kAntiqueWhite,
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+            const SizedBox(height: 12.0),
+            animation.value < 0.6
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 20.0, height: 100.0),
+                      const Text(
+                        'Send',
                         style: TextStyle(
-                          fontSize: 60.0,
+                          color: kBlackOlive,
+                          fontSize: 48.0,
                           fontFamily: 'DancingScript',
-                          color: kAntiqueWhite,
                         ),
                       ),
-                    )
-                  : Container(),
-            ],
-          ),
-          const SizedBox(height: 12.0),
-          animation.value < 0.6
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 20.0, height: 100.0),
-                    const Text(
-                      'Send',
-                      style: TextStyle(
-                        color: kBlackOlive,
-                        fontSize: 48.0,
-                        fontFamily: 'DancingScript',
+                      const SizedBox(width: 12.0, height: 100.0),
+                      DefaultTextStyle(
+                        style: const TextStyle(
+                          fontSize: 48.0,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.w900,
+                          color: kAntiqueWhite,
+                          //fontFamily: 'Horizon',
+                        ),
+                        child: AnimatedTextKit(
+                          totalRepeatCount: 1,
+                          animatedTexts: [
+                            TypewriterAnimatedText('stories',
+                                speed: const Duration(milliseconds: 200)),
+                            TypewriterAnimatedText('love',
+                                speed: const Duration(milliseconds: 200)),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12.0, height: 100.0),
-                    DefaultTextStyle(
-                      style: const TextStyle(
-                        fontSize: 48.0,
-                        fontFamily: 'Lato',
-                        fontWeight: FontWeight.w900,
-                        color: kAntiqueWhite,
-                        //fontFamily: 'Horizon',
+                    ],
+                  )
+                : Column(
+                    children: [
+                      RoundedButtonPrimary(
+                        title: 'Log in',
+                        onPressed: () {
+                          Navigator.pushNamed(context, LoginScreen.id);
+                        },
                       ),
-                      child: AnimatedTextKit(
-                        totalRepeatCount: 1,
-                        animatedTexts: [
-                          TypewriterAnimatedText('stories',
-                              speed: const Duration(milliseconds: 200)),
-                          TypewriterAnimatedText('love',
-                              speed: const Duration(milliseconds: 200)),
-                        ],
+                      RoundedButtonSecondary(
+                        title: 'Sign up',
+                        onPressed: () {
+                          Navigator.pushNamed(context, RegistrationScreen.id);
+                        },
                       ),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    RoundedButtonPrimary(
-                      title: 'Log in',
-                      onPressed: () {
-                        Navigator.pushNamed(context, LoginScreen.id);
-                      },
-                    ),
-                    RoundedButtonSecondary(
-                      title: 'Sign up',
-                      onPressed: () {
-                        Navigator.pushNamed(context, RegistrationScreen.id);
-                      },
-                    ),
-                  ],
-                ),
-        ],
+                    ],
+                  ),
+          ],
+        ),
       ),
     );
   }

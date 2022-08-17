@@ -81,79 +81,81 @@ class _EditUserInformationScreenState
         backgroundColor: kGreenOlivine,
         elevation: 0.0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            children: [
-              image == null
-                  ? user == null
-                      ? const CircleAvatar(
-                          radius: 60.0,
-                          backgroundColor: kAntiqueWhite,
-                          backgroundImage:
-                              AssetImage('assets/images/avatar.png'),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                image == null
+                    ? user == null
+                        ? const CircleAvatar(
+                            radius: 60.0,
+                            backgroundColor: kAntiqueWhite,
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          )
+                        : CircleAvatar(
+                            radius: 60.0,
+                            backgroundColor: kAntiqueWhite,
+                            backgroundImage: NetworkImage(user!.profilePicture),
+                          )
+                    : CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: kAntiqueWhite,
+                        backgroundImage: FileImage(image!),
+                      ),
+                Positioned(
+                  bottom: -12.0,
+                  left: 66.0,
+                  child: isEditing
+                      ? IconButton(
+                          onPressed: selectImage,
+                          icon: const Icon(
+                            Icons.add_a_photo,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
                         )
-                      : CircleAvatar(
-                          radius: 60.0,
-                          backgroundColor: kAntiqueWhite,
-                          backgroundImage: NetworkImage(user!.profilePicture),
-                        )
-                  : CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
-                      backgroundImage: FileImage(image!),
-                    ),
-              Positioned(
-                bottom: -12.0,
-                left: 66.0,
-                child: isEditing
-                    ? IconButton(
-                        onPressed: selectImage,
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          color: Colors.white,
-                          size: 30.0,
-                        ),
-                      )
-                    : Container(),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24.0),
-                width: size.width * 0.85,
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  enabled: isEditing,
-                  controller: nameController,
-                  decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Enter you name'),
+                      : Container(),
                 ),
-              ),
-              Material(
-                elevation: 5.0,
-                borderRadius: BorderRadius.circular(24.0),
-                child: CircleAvatar(
-                  backgroundColor: kDarkOrange,
-                  radius: 24.0,
-                  child: IconButton(
-                    color: kAntiqueWhite,
-                    onPressed:
-                        isEditing ? () => storeUserData() : toggleEditingMode,
-                    icon: Icon(isEditing ? Icons.done : Icons.edit),
+              ],
+            ),
+            const SizedBox(
+              height: 24.0,
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24.0),
+                  width: size.width * 0.85,
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    enabled: isEditing,
+                    controller: nameController,
+                    decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Enter you name'),
                   ),
                 ),
-              )
-            ],
-          ),
-        ],
+                Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(24.0),
+                  child: CircleAvatar(
+                    backgroundColor: kDarkOrange,
+                    radius: 24.0,
+                    child: IconButton(
+                      color: kAntiqueWhite,
+                      onPressed:
+                          isEditing ? () => storeUserData() : toggleEditingMode,
+                      icon: Icon(isEditing ? Icons.done : Icons.edit),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

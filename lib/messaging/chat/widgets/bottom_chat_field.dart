@@ -89,108 +89,110 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   Widget build(BuildContext context) {
     final messageReply = ref.watch(messageReplyProvider);
     final isShownMessageReply = messageReply != null;
-    return Column(
-      children: [
-        isShownMessageReply ? const MessageReplyPreview() : const SizedBox(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: TextFormField(
-                focusNode: focusNode,
-                controller: messageController,
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    setState(() {
-                      isShownSendButton = true;
-                    });
-                  } else {
-                    setState(() {
-                      isShownSendButton = false;
-                    });
-                  }
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: kAntiqueWhite,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: SizedBox(
-                      width: 102.0,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: toggleEmojiKeyboardContainer,
-                            icon: const Icon(
-                              Icons.emoji_emotions,
-                              color: kGrey,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: selectGif,
-                            icon: const Icon(
-                              Icons.gif,
-                              color: kGrey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  hintText: 'Type a message',
-                  contentPadding: const EdgeInsets.all(12.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.0),
-                    borderSide: const BorderSide(
-                      width: 0.0,
-                      style: BorderStyle.none,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: 12.0,
-                right: 3.0,
-                left: 3.0,
-              ),
-              child: CircleAvatar(
-                backgroundColor: kDarkOrange,
-                radius: 24.0,
-                child: GestureDetector(
-                  onTap: sendTextMessage,
-                  child: const Icon(
-                    Icons.send,
-                    color: kAntiqueWhite,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-        isShownEmojiContainer
-            ? Material(
-                color: kAntiqueWhite,
-                child: SizedBox(
-                  height: 330.0,
-                  child: EmojiPicker(
-                    onEmojiSelected: (category, emoji) {
-                      setState(() {
-                        messageController.text =
-                            messageController.text + emoji.emoji;
-                      });
-                      if (!isShownSendButton) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        children: [
+          isShownMessageReply ? const MessageReplyPreview() : const SizedBox(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    focusNode: focusNode,
+                    controller: messageController,
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
                         setState(() {
                           isShownSendButton = true;
                         });
+                      } else {
+                        setState(() {
+                          isShownSendButton = false;
+                        });
                       }
                     },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: SizedBox(
+                        width: 102.0,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: toggleEmojiKeyboardContainer,
+                              icon: const Icon(
+                                Icons.emoji_emotions_outlined,
+                                color: kGrey,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: selectGif,
+                              icon: const Icon(
+                                Icons.gif,
+                                color: kGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      hintText: 'Type a message',
+                      contentPadding: const EdgeInsets.all(12.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24.0),
+                        borderSide: const BorderSide(
+                          width: 0.0,
+                          style: BorderStyle.none,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              )
-            : const SizedBox(),
-      ],
+                const SizedBox(width: 6.0),
+                Material(
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0)),
+                  child: CircleAvatar(
+                    backgroundColor: kDarkOrange,
+                    radius: 24.0,
+                    child: GestureDetector(
+                      onTap: sendTextMessage,
+                      child: const Icon(
+                        Icons.send,
+                        color: kAntiqueWhite,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          isShownEmojiContainer
+              ? Material(
+                  color: kAntiqueWhite,
+                  child: SizedBox(
+                    height: 330.0,
+                    child: EmojiPicker(
+                      onEmojiSelected: (category, emoji) {
+                        setState(() {
+                          messageController.text =
+                              messageController.text + emoji.emoji;
+                        });
+                        if (!isShownSendButton) {
+                          setState(() {
+                            isShownSendButton = true;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                )
+              : const SizedBox(),
+        ],
+      ),
     );
   }
 }

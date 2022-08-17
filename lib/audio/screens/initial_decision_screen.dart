@@ -17,37 +17,40 @@ class InitialDecisionScreen extends StatelessWidget {
         backgroundColor: kGreenOlivine,
         elevation: 0.0,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            'What would you like to do today?',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: kBlackOlive,
-              fontSize: 48.0,
-              fontFamily: 'DancingScript',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'What would you like to do today?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: kBlackOlive,
+                fontSize: 48.0,
+                fontFamily: 'DancingScript',
+              ),
             ),
-          ),
-          const SizedBox(height: 24.0),
-          Column(
-            children: [
-              RoundedButtonPrimary(
-                title: 'Listen to a story',
-                onPressed: () {
-                  Navigator.pushNamed(context, HomeScreen.id);
-                },
-              ),
-              RoundedButtonSecondary(
-                title: 'Record a story',
-                onPressed: () {
-                  Navigator.pushNamed(context, HomeScreen.id);
-                },
-              ),
-            ],
-          ),
-        ],
+            const SizedBox(height: 24.0),
+            Column(
+              children: [
+                RoundedButtonPrimary(
+                  title: 'Listen to a story',
+                  onPressed: () {
+                    Navigator.pushNamed(context, HomeScreen.id);
+                  },
+                ),
+                RoundedButtonSecondary(
+                  title: 'Record a story',
+                  onPressed: () {
+                    Navigator.pushNamed(context, HomeScreen.id);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

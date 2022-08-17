@@ -26,6 +26,7 @@ class ChatScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenBasicStructure(
+      backgroundColor: kAntiqueWhite,
       appBar: AppBar(
         title: isGroupChat
             ? Text(name)
@@ -33,22 +34,31 @@ class ChatScreen extends ConsumerWidget {
                 stream: ref.watch(authControllerProvider).getUserDataById(uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const LoaderScreen();
+                    return const SizedBox();
                   }
-                  return Column(
+                  return Row(
                     children: [
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                        ),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(profilePicture),
+                        backgroundColor: kAntiqueWhite,
                       ),
-                      Text(
-                        snapshot.data!.isOnline ? 'online' : 'offline',
-                        style: const TextStyle(
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.normal,
-                        ),
+                      const SizedBox(width: 24.0),
+                      Column(
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          Text(
+                            snapshot.data!.isOnline ? 'online' : 'offline',
+                            style: const TextStyle(
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   );

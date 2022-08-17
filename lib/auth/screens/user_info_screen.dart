@@ -63,68 +63,70 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ScreenBasicStructure(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            children: [
-              image == null
-                  ? const CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
-                      backgroundImage: AssetImage('assets/images/avatar.png'),
-                    )
-                  : CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
-                      backgroundImage: FileImage(image!),
-                    ),
-              Positioned(
-                bottom: -12.0,
-                left: 66.0,
-                child: IconButton(
-                  onPressed: selectImage,
-                  icon: const Icon(
-                    Icons.add_a_photo,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24.0),
-                width: size.width * 0.85,
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: nameController,
-                  decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Enter you name'),
-                ),
-              ),
-              Material(
-                elevation: 5.0,
-                borderRadius: BorderRadius.circular(24.0),
-                child: CircleAvatar(
-                  backgroundColor: kDarkOrange,
-                  radius: 24.0,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                image == null
+                    ? const CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: kAntiqueWhite,
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                      )
+                    : CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: kAntiqueWhite,
+                        backgroundImage: FileImage(image!),
+                      ),
+                Positioned(
+                  bottom: -12.0,
+                  left: 66.0,
                   child: IconButton(
-                    color: kAntiqueWhite,
-                    onPressed: () => storeUserData(),
-                    icon: const Icon(Icons.done),
+                    onPressed: selectImage,
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
                   ),
                 ),
-              )
-            ],
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(
+              height: 24.0,
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24.0),
+                  width: size.width * 0.85,
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    controller: nameController,
+                    decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Enter you name'),
+                  ),
+                ),
+                Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(24.0),
+                  child: CircleAvatar(
+                    backgroundColor: kDarkOrange,
+                    radius: 24.0,
+                    child: IconButton(
+                      color: kAntiqueWhite,
+                      onPressed: () => storeUserData(),
+                      icon: const Icon(Icons.done),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -33,12 +33,13 @@ class SenderMessageCard extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width - 45.0),
+              maxWidth: MediaQuery.of(context).size.width - 45.0,
+              minWidth: 102.0),
           child: Card(
             elevation: 1.0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(9.0)),
-            color: kAntiqueWhite,
+            color: Colors.white,
             margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
             child: Stack(
               children: [

@@ -62,52 +62,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return ProgressHUD(
       child: Builder(builder: (context) {
         return ScreenBasicStructure(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                child: Hero(
-                  tag: kLogoTag,
-                  child: Image.asset('assets/images/logo.png'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: Hero(
+                    tag: kLogoTag,
+                    child: Image.asset('assets/images/logo.png'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24.0),
-              TextField(
-                controller: emailController,
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Email',
+                const SizedBox(height: 24.0),
+                TextField(
+                  controller: emailController,
+                  decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Email',
+                  ),
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.emailAddress,
                 ),
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 12.0),
-              TextField(
-                controller: passwordController,
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Password',
+                const SizedBox(height: 12.0),
+                TextField(
+                  controller: passwordController,
+                  decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Password',
+                  ),
+                  textAlign: TextAlign.center,
+                  obscureText: true,
                 ),
-                textAlign: TextAlign.center,
-                obscureText: true,
-              ),
-              const SizedBox(height: 12.0),
-              RoundedButtonPrimary(
-                title: 'Log in',
-                onPressed: () => sendEmailAndPassword(context),
-              ),
-              const SizedBox(height: 12.0),
-              TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: kAntiqueWhite,
-                    textStyle: const TextStyle(fontSize: 16)),
-                onPressed: () {
-                  //TODO: forgot your password
-                },
-                child: const Text(
-                  'Forgot your password?',
+                const SizedBox(height: 12.0),
+                RoundedButtonPrimary(
+                  title: 'Log in',
+                  onPressed: () => sendEmailAndPassword(context),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      foregroundColor: kAntiqueWhite,
+                      textStyle: const TextStyle(fontSize: 16)),
+                  onPressed: () {
+                    //TODO: forgot your password
+                  },
+                  child: const Text(
+                    'Forgot your password?',
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }),

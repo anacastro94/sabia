@@ -33,9 +33,16 @@ class _ChatListState extends ConsumerState<ChatList> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     messageStream = widget.isGroupChat
-        ? ref.read(chatControllerProvider).getGroupChatStream(widget.receiverId)
-        : ref.read(chatControllerProvider).getChatStream(widget.receiverId);
+        ? ref
+            .watch(chatControllerProvider)
+            .getGroupChatStream(widget.receiverId)
+        : ref.watch(chatControllerProvider).getChatStream(widget.receiverId);
   }
 
   @override
@@ -52,64 +59,74 @@ class _ChatListState extends ConsumerState<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Message>>(
-      stream: messageStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoaderScreen();
-        }
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Container(
+            constraints: BoxConstraints(maxHeight: constraints.maxHeight),
+            child: StreamBuilder<List<Message>>(
+              stream: messageStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoaderScreen();
+                }
 
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          messageScrollController
-              .jumpTo(messageScrollController.position.maxScrollExtent);
-        });
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  messageScrollController
+                      .jumpTo(messageScrollController.position.maxScrollExtent);
+                });
 
-        if (!snapshot.hasData) return const SizedBox(); //TODO: No messages
-
-        return ListView.builder(
-          controller: messageScrollController,
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            final messageData = snapshot.data![index];
-            var timeSent = DateFormat.Hm().format(messageData.timeSent);
-            if (!messageData.isSeen &&
-                (messageData.receiverId == firebaseAuth.currentUser!.uid)) {
-              ref.read(chatControllerProvider).setChatMessageSeen(
-                    context,
-                    widget.receiverId,
-                    messageData.messageId,
-                  );
-            }
-            if (messageData.senderId == firebaseAuth.currentUser!.uid) {
-              return MyMessageCard(
-                  message: messageData.text,
-                  date: timeSent,
-                  type: messageData.type,
-                  onLeftSwipe: () => onMessageSwipe(
-                        messageData.text,
-                        true,
-                        messageData.type,
-                      ),
-                  repliedText: messageData.repliedMessage,
-                  userName: messageData.repliedTo,
-                  repliedMessageType: messageData.repliedMessageType,
-                  isSeen: messageData.isSeen);
-            }
-            return SenderMessageCard(
-                message: messageData.text,
-                date: timeSent,
-                type: messageData.type,
-                onRightSwipe: () => onMessageSwipe(
-                      messageData.text,
-                      false,
-                      messageData.type,
-                    ),
-                repliedText: messageData.repliedMessage,
-                userName: messageData.repliedTo,
-                repliedMessageType: messageData.repliedMessageType);
-          },
-        );
-      },
+                return ListView.builder(
+                  shrinkWrap: true,
+                  controller: messageScrollController,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final messageData = snapshot.data![index];
+                    var timeSent = DateFormat.Hm().format(messageData.timeSent);
+                    if (!messageData.isSeen &&
+                        (messageData.receiverId ==
+                            firebaseAuth.currentUser!.uid)) {
+                      ref.read(chatControllerProvider).setChatMessageSeen(
+                            context,
+                            widget.receiverId,
+                            messageData.messageId,
+                          );
+                    }
+                    if (messageData.senderId == firebaseAuth.currentUser!.uid) {
+                      return MyMessageCard(
+                          message: messageData.text,
+                          date: timeSent,
+                          type: messageData.type,
+                          onLeftSwipe: () => onMessageSwipe(
+                                messageData.text,
+                                true,
+                                messageData.type,
+                              ),
+                          repliedText: messageData.repliedMessage,
+                          userName: messageData.repliedTo,
+                          repliedMessageType: messageData.repliedMessageType,
+                          isSeen: messageData.isSeen);
+                    }
+                    return SenderMessageCard(
+                        message: messageData.text,
+                        date: timeSent,
+                        type: messageData.type,
+                        onRightSwipe: () => onMessageSwipe(
+                              messageData.text,
+                              false,
+                              messageData.type,
+                            ),
+                        repliedText: messageData.repliedMessage,
+                        userName: messageData.repliedTo,
+                        repliedMessageType: messageData.repliedMessageType);
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

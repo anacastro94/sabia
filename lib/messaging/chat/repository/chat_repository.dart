@@ -192,6 +192,18 @@ class ChatRepository {
             message.toMap(),
           );
     } else {
+      // users -> senderId -> receiverId -> messages -> messageId -> store message
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(messageId)
+          .set(
+            message.toMap(),
+          );
+
       // users -> receiverId -> senderId -> messages -> messageId -> store message
       await firestore
           .collection('users')
