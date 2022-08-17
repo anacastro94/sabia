@@ -53,7 +53,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
     if (!mounted) return;
-    Navigator.pushNamed(context, InitialDecisionScreen.id);
+    Navigator.pushNamedAndRemoveUntil(
+        context, InitialDecisionScreen.id, (route) => false);
   }
 
   @override

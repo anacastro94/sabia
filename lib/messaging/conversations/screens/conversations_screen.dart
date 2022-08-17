@@ -1,5 +1,6 @@
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
+import 'package:bbk_final_ana/common/widgets/stream_testing.dart';
 import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
 import 'package:bbk_final_ana/messaging/select_contacts/screens/select_contact_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class ConversationsScreen extends ConsumerStatefulWidget {
 }
 
 class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -54,38 +55,13 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
       appBar: AppBar(
         title: const Text(
           'Chats',
-          style: TextStyle(color: kBlackOlive),
+          style: kTextStyleAppBarTitle,
         ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.chevron_left,
-            color: kBlackOlive,
-          ),
-        ),
-        actions: [
-          PopupMenuButton(
-            icon: const Icon(
-              Icons.more_vert,
-              color: kBlackOlive,
-            ),
-            color: kAntiqueWhite,
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                onTap: () => Future(
-                    () => Navigator.pushNamed(context, CreateGroupScreen.id)),
-                child: const Text(
-                  'Create group',
-                  style: TextStyle(color: kBlackOlive),
-                ),
-              ),
-            ],
-          )
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Navigator.pushNamed(context, SelectContactScreen.id);
+          Navigator.pushNamed(context,
+              SelectContactScreen.id); //TODO: SelectContactScreen not working
         },
         backgroundColor: kDarkOrange,
         child: const Icon(

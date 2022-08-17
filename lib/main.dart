@@ -27,7 +27,8 @@ class MyApp extends ConsumerWidget {
       title: 'Sabiá',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          backgroundColor: kAntiqueWhite,
+          backgroundColor: kGreenOlivine,
+          elevation: 0.0,
         ),
         fontFamily: 'Lato',
         scaffoldBackgroundColor: kGreenOlivine,

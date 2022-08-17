@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:riverpod/riverpod.dart';
 
+import '../../chat/screens/chat_screen.dart';
+
 final selectContactRepositoryProvider = Provider(
     (ref) => SelectContactRepository(firestore: FirebaseFirestore.instance));
 
@@ -29,25 +31,25 @@ class SelectContactRepository {
     try {
       var userCollection = await firestore.collection('users').get();
       bool isFound = false;
+      print('USER COLLECTION SIZE: ${userCollection.size}');
       for (var document in userCollection.docs) {
         var userData = UserModel.fromMap(document.data());
         String selectedEmail = selectedContact.emails[0].address;
+        // print('SELECTED EMAIL DEBUG: $selectedEmail');
+        // print('IS USER REGISTERED?: ${selectedEmail == userData.email}');
         if (selectedEmail == userData.email) {
           isFound = true;
-          //TODO: create ChatScreen
-          // Navigator.pushNamed(
-          //   context,
-          //   MobileChatScreen.routeName,
-          //   arguments: {
-          //     'name': userData.name,
-          //     'uid': userData.uid,
-          //   },
-          // );
+          Navigator.pushNamed(context, ChatScreen.id, arguments: {
+            'name': userData.name,
+            'uid': userData.uid,
+            'isGroupChat': false,
+            'profilePicture': userData.profilePicture,
+          });
         }
       }
       if (!isFound) {
         showSnackBar(
-            context: context, content: 'Contact not registed on this app');
+            context: context, content: 'Contact not registered on this app');
       }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());

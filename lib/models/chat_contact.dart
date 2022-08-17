@@ -23,12 +23,19 @@ class ChatContact {
     };
   }
 
+  // ChatContact.fromMap(Map<String, dynamic> map)
+  //     : name = map['name'] ?? '',
+  //       profilePicture = map['profilePicture'] ?? '',
+  //       contactId = map['contactId'] ?? '',
+  //       timeSent = DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
+  //       lastMessage = map['lastMessage'] ?? '';
+
   factory ChatContact.fromMap(Map<String, dynamic> map) {
     return ChatContact(
       name: map['name'] ?? '',
       profilePicture: map['profilePicture'] ?? '',
       contactId: map['contactId'] ?? '',
-      timeSent: DateTime.fromMicrosecondsSinceEpoch(map['timeSent']),
+      timeSent: map['timeSent'].toDate(),
       lastMessage: map['lastMessage'] ?? '',
     );
   }

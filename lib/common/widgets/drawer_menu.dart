@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:bbk_final_ana/common/constants/constants.dart';
+import 'package:bbk_final_ana/messaging/conversations/screens/conversations_screen.dart';
+import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,14 +28,36 @@ class DrawerMenu extends ConsumerWidget {
         children: [
           const StandardDrawerHeader(),
           ListTile(
+            leading: const Icon(Icons.comment),
+            title: const Text(
+              'Chat',
+              style: kTextStyleMenuItem,
+            ),
+            onTap: () => Navigator.pushNamed(context, ConversationsScreen.id),
+          ),
+          ListTile(
+            leading: const Icon(Icons.group_add),
+            title: const Text(
+              'Create group',
+              style: kTextStyleMenuItem,
+            ),
+            onTap: () => Navigator.pushNamed(context, CreateGroupScreen.id),
+          ),
+          ListTile(
             leading: const Icon(Icons.manage_accounts),
-            title: const Text('Profile'),
-            onTap: () => Navigator.pushNamedAndRemoveUntil(
-                context, EditUserInformationScreen.id, (route) => false),
+            title: const Text(
+              'Profile',
+              style: kTextStyleMenuItem,
+            ),
+            onTap: () =>
+                Navigator.pushNamed(context, EditUserInformationScreen.id),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            title: const Text(
+              'Logout',
+              style: kTextStyleMenuItem,
+            ),
             onTap: logCurrentUserOut,
           ),
         ],

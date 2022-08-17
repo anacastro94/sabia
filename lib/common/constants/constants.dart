@@ -14,6 +14,16 @@ const kButtonTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
 
+const kTextStyleMenuItem = TextStyle(
+  fontSize: 16,
+  color: kBlackOlive,
+);
+
+const kTextStyleAppBarTitle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.w700,
+);
+
 const kTextFieldDecoration = InputDecoration(
   hintText: 'Hint text...',
   filled: true,

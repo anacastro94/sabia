@@ -93,6 +93,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       children: [
         isShownMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: TextFormField(
@@ -169,20 +170,23 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           ],
         ),
         isShownEmojiContainer
-            ? SizedBox(
-                height: 330.0,
-                child: EmojiPicker(
-                  onEmojiSelected: (category, emoji) {
-                    setState(() {
-                      messageController.text =
-                          messageController.text + emoji.emoji;
-                    });
-                    if (!isShownSendButton) {
+            ? Material(
+                color: kAntiqueWhite,
+                child: SizedBox(
+                  height: 330.0,
+                  child: EmojiPicker(
+                    onEmojiSelected: (category, emoji) {
                       setState(() {
-                        isShownSendButton = true;
+                        messageController.text =
+                            messageController.text + emoji.emoji;
                       });
-                    }
-                  },
+                      if (!isShownSendButton) {
+                        setState(() {
+                          isShownSendButton = true;
+                        });
+                      }
+                    },
+                  ),
                 ),
               )
             : const SizedBox(),

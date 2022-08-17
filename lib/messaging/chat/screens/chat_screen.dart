@@ -28,10 +28,7 @@ class ChatScreen extends ConsumerWidget {
     return ScreenBasicStructure(
       appBar: AppBar(
         title: isGroupChat
-            ? Text(
-                name,
-                style: const TextStyle(color: kBlackOlive),
-              )
+            ? Text(name)
             : StreamBuilder<UserModel>(
                 stream: ref.watch(authControllerProvider).getUserDataById(uid),
                 builder: (context, snapshot) {
@@ -44,7 +41,6 @@ class ChatScreen extends ConsumerWidget {
                         name,
                         style: const TextStyle(
                           fontSize: 18.0,
-                          color: kBlackOlive,
                         ),
                       ),
                       Text(
@@ -59,15 +55,6 @@ class ChatScreen extends ConsumerWidget {
                 },
               ),
         centerTitle: false,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.chevron_left,
-            color: kBlackOlive,
-          ),
-        ),
       ),
       child: Column(
         children: [

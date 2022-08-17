@@ -39,13 +39,15 @@ class ChatRepository {
             .get();
         var user = UserModel.fromMap(userData.data()!);
 
-        contacts.add(ChatContact(
-          name: user.name,
-          profilePicture: user.profilePicture,
-          contactId: chatContact.contactId,
-          timeSent: chatContact.timeSent,
-          lastMessage: chatContact.lastMessage,
-        ));
+        contacts.add(
+          ChatContact(
+            name: user.name,
+            profilePicture: user.profilePicture,
+            contactId: chatContact.contactId,
+            timeSent: chatContact.timeSent,
+            lastMessage: chatContact.lastMessage,
+          ),
+        );
       }
       return contacts;
     });

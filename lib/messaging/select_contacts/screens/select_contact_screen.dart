@@ -22,16 +22,9 @@ class SelectContactScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenBasicStructure(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.chevron_left,
-            color: kBlackOlive,
-          ),
-        ),
         title: const Text(
           'Select contact',
-          style: TextStyle(color: kBlackOlive),
+          style: kTextStyleAppBarTitle,
         ),
       ),
       child: ref.watch(getContactsProvider).when(
@@ -42,19 +35,24 @@ class SelectContactScreen extends ConsumerWidget {
                   return InkWell(
                     onTap: () => selectContact(ref, contact, context),
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ListTile(
-                        title: Text(
-                          contact.displayName,
-                          style: const TextStyle(fontSize: 18.0),
+                      padding: const EdgeInsets.only(bottom: 3.0),
+                      child: Material(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0)),
+                        color: kAntiqueWhite,
+                        child: ListTile(
+                          title: Text(
+                            contact.displayName,
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
+                          leading: contact.photo == null
+                              ? null
+                              : CircleAvatar(
+                                  backgroundColor: kAntiqueWhite,
+                                  backgroundImage: MemoryImage(contact.photo!),
+                                  radius: 30.0,
+                                ),
                         ),
-                        leading: contact.photo == null
-                            ? null
-                            : CircleAvatar(
-                                backgroundColor: kAntiqueWhite,
-                                backgroundImage: MemoryImage(contact.photo!),
-                                radius: 30.0,
-                              ),
                       ),
                     ),
                   );
