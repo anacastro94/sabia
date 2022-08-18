@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../common/constants/constants.dart';
 import '../../../common/screens/loader_screen.dart';
-import 'no_active_conversations.dart';
 
 class ConversationsList extends ConsumerWidget {
   const ConversationsList({Key? key}) : super(key: key);
@@ -24,7 +23,10 @@ class ConversationsList extends ConsumerWidget {
                 stream: ref.watch(chatControllerProvider).getChatGroups(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const LoaderScreen();
+                    return const CircularProgressIndicator(
+                      backgroundColor: kAntiqueWhite,
+                      color: kDarkOrange,
+                    );
                   }
 
                   return ListView.builder(
@@ -51,7 +53,7 @@ class ConversationsList extends ConsumerWidget {
                                   groupData.name,
                                   style: const TextStyle(
                                     fontSize: 18.0,
-                                    color: kBlackOlive,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 subtitle: Padding(
@@ -70,7 +72,7 @@ class ConversationsList extends ConsumerWidget {
                                 trailing: Text(
                                   DateFormat.Hm().format(groupData.timeSent),
                                   style: const TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.white,
                                     fontSize: 13.0,
                                   ),
                                 ),
@@ -91,7 +93,10 @@ class ConversationsList extends ConsumerWidget {
                   stream: ref.watch(chatControllerProvider).getChatContacts(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const LoaderScreen();
+                      return const CircularProgressIndicator(
+                        backgroundColor: kAntiqueWhite,
+                        color: kDarkOrange,
+                      );
                     }
 
                     return ListView.builder(

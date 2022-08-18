@@ -10,6 +10,8 @@ import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../models/user_model.dart';
+
 final groupRepositoryProvider = Provider((ref) => GroupRepository(
       firestore: FirebaseFirestore.instance,
       auth: FirebaseAuth.instance,
@@ -28,18 +30,9 @@ class GroupRepository {
   });
 
   void createGroup(BuildContext context, String name, File profilePicture,
-      List<Contact> selectedContacts) async {
+      List<UserModel> selectedContacts) async {
     try {
-      List<String> userIds = [];
-      for (int i = 0; i < selectedContacts.length; i++) {
-        var userCollection = await firestore
-            .collection('users')
-            .where('email', isEqualTo: selectedContacts[i].emails[0])
-            .get();
-        if (userCollection.docs.isNotEmpty && userCollection.docs[0].exists) {
-          userIds.add(userCollection.docs[0].data()['uid']);
-        }
-      }
+      List<String> userIds = [...selectedContacts.map((e) => e.uid)];
       var groupId = const Uuid().v1();
       String profileUrl = await ref
           .read(commonFirebaseStorageRepositoryProvider)

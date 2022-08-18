@@ -8,16 +8,19 @@ class ScreenBasicStructure extends StatelessWidget {
     this.appBar,
     this.floatingActionButton,
     this.backgroundColor,
+    this.resizeToAvoidBottomInset,
   }) : super(key: key);
 
   final Widget? child;
   final PreferredSizeWidget? appBar;
   final Widget? floatingActionButton;
   final Color? backgroundColor;
+  final bool? resizeToAvoidBottomInset;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: backgroundColor,
       appBar: appBar,
       endDrawer: const DrawerMenu(),

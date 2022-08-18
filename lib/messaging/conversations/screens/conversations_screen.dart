@@ -1,12 +1,11 @@
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
-import 'package:bbk_final_ana/common/widgets/stream_testing.dart';
-import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
-import 'package:bbk_final_ana/messaging/select_contacts/screens/select_contact_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/constants/constants.dart';
+import '../../select_contacts/screens/select_user_contact_screen.dart';
 import '../widgets/conversation_list.dart';
 
 class ConversationsScreen extends ConsumerStatefulWidget {
@@ -60,8 +59,7 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Navigator.pushNamed(context,
-              SelectContactScreen.id); //TODO: SelectContactScreen not working
+          Navigator.pushNamed(context, SelectUserContactScreen.id);
         },
         backgroundColor: kDarkOrange,
         child: const Icon(

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 import 'auth/screens/edit_user_info_screen.dart';
 import 'auth/screens/registration_screen.dart';
-import 'messaging/select_contacts/screens/select_contact_screen.dart';
+import 'messaging/select_contacts/screens/select_user_contact_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -38,9 +38,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => const EditUserInformationScreen());
 
-    case SelectContactScreen.id:
+    case SelectUserContactScreen.id:
       return MaterialPageRoute(
-          builder: (context) => const SelectContactScreen());
+          builder: (context) => const SelectUserContactScreen());
 
     case CreateGroupScreen.id:
       return MaterialPageRoute(builder: (context) => const CreateGroupScreen());

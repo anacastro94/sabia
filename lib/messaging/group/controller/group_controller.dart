@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bbk_final_ana/messaging/group/repository/group_repository.dart';
+import 'package:bbk_final_ana/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,7 @@ class GroupController {
   });
 
   void createGroup(BuildContext context, String name, File profilePicture,
-      List<Contact> selectedContacts) {
+      List<UserModel> selectedContacts) {
     groupRepository.createGroup(
         context, name, profilePicture, selectedContacts);
   }

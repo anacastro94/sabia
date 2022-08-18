@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bbk_final_ana/audio/screens/initial_decision_screen.dart';
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/models/user_model.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/widgets/screen_basic_structure.dart';
-import '../../screens/home_screen.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
   const UserInformationScreen({Key? key}) : super(key: key);
@@ -52,10 +52,8 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
           .read(authControllerProvider)
           .saveUserDataToFirebase(context, name, image);
       if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, InitialDecisionScreen.id, (route) => false);
     }
   }
 

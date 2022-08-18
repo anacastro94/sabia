@@ -18,7 +18,7 @@ class ChatContact {
       'name': name,
       'profilePicture': profilePicture,
       'contactId': contactId,
-      'timeSent': timeSent,
+      'timeSent': timeSent.millisecondsSinceEpoch,
       'lastMessage': lastMessage
     };
   }
@@ -35,7 +35,7 @@ class ChatContact {
       name: map['name'] ?? '',
       profilePicture: map['profilePicture'] ?? '',
       contactId: map['contactId'] ?? '',
-      timeSent: map['timeSent'].toDate(),
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       lastMessage: map['lastMessage'] ?? '',
     );
   }
