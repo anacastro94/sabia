@@ -4,72 +4,37 @@ import 'package:bbk_final_ana/audio/enums/play_button_enum.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/widgets/standard_circular_progress_indicator.dart';
-import '../provider/player_buttton_state_provider.dart';
-import '../provider/progress_bar_state_provider.dart';
 
-class PlayerScreen extends ConsumerStatefulWidget {
+class PlayerScreen extends StatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
   static const String id = '/player';
 
   @override
-  ConsumerState<PlayerScreen> createState() => _PlayerScreenState();
+  State<PlayerScreen> createState() => _PlayerScreenState();
 }
 
-class _PlayerScreenState extends ConsumerState<PlayerScreen> {
+class _PlayerScreenState extends State<PlayerScreen> {
   final String storyTitle = 'A long story title';
   final String senderName = 'Sender Name';
   late final AudioPlayerController _playerController;
-  late final StateController<PlayerProgressState>
-      _playerProgressStateController;
 
   @override
   void initState() {
     super.initState();
+    _playerController = AudioPlayerController();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _playerController = ref.watch(audioPlayerControllerProvider);
-    _playerProgressStateController =
-        ref.watch(_playerController.playerProgressStateProvider.notifier);
   }
 
   @override
   void dispose() {
     super.dispose();
     _playerController.dispose();
-  }
-
-  Widget getPlayerButton() {
-    switch (ref.watch(_playerController.playerButtonStateProvider)) {
-      case PlayerButtonState.loading:
-        return Container(
-          margin: const EdgeInsets.all(8.0),
-          width: 32.0,
-          height: 32.0,
-          child: const StandardCircularProgressIndicator(),
-        );
-      case PlayerButtonState.paused:
-        return IconButton(
-          icon: const Icon(Icons.play_arrow),
-          iconSize: 32.0,
-          onPressed: () {
-            _playerController.play();
-          },
-        );
-      case PlayerButtonState.playing:
-        return IconButton(
-          icon: const Icon(Icons.pause),
-          iconSize: 32.0,
-          onPressed: () {
-            _playerController.pause();
-          },
-        );
-    }
   }
 
   @override
@@ -131,19 +96,46 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 36.0),
                     child: Column(
                       children: [
-                        StreamBuilder<PlayerProgressState>(
-                          stream: _playerProgressStateController.stream,
-                          builder: (context, snapshot) => ProgressBar(
-                            progress: snapshot.data?.current ?? Duration.zero,
-                            buffered: snapshot.data?.buffered ?? Duration.zero,
-                            total: snapshot.data?.total ?? Duration.zero,
-                            baseBarColor: kDarkOrange.withOpacity(0.2),
-                            thumbColor: kDarkOrange,
-                            bufferedBarColor: kDarkOrange.withOpacity(0.5),
-                            progressBarColor: kDarkOrange,
-                          ),
-                        ),
-                        getPlayerButton(),
+                        ValueListenableBuilder(
+                            valueListenable: _playerController.progressNotifier,
+                            builder: (context, value, _) {
+                              return ProgressBar(
+                                progress: value.current,
+                                buffered: value.buffered,
+                                total: value.total,
+                                onSeek: _playerController.seek,
+                                baseBarColor: kDarkOrange.withOpacity(0.2),
+                                thumbColor: kDarkOrange,
+                                bufferedBarColor: kDarkOrange.withOpacity(0.5),
+                                progressBarColor: kDarkOrange,
+                              );
+                            }),
+                        ValueListenableBuilder<PlayerButtonState>(
+                            valueListenable: _playerController.buttonNotifier,
+                            builder: (context, value, _) {
+                              switch (value) {
+                                case PlayerButtonState.loading:
+                                  return Container(
+                                    margin: const EdgeInsets.all(8.0),
+                                    width: 32.0,
+                                    height: 32.0,
+                                    child:
+                                        const StandardCircularProgressIndicator(),
+                                  );
+                                case PlayerButtonState.paused:
+                                  return IconButton(
+                                    icon: const Icon(Icons.play_arrow),
+                                    iconSize: 32.0,
+                                    onPressed: _playerController.play,
+                                  );
+                                case PlayerButtonState.playing:
+                                  return IconButton(
+                                    icon: const Icon(Icons.pause),
+                                    iconSize: 32.0,
+                                    onPressed: _playerController.pause,
+                                  );
+                              }
+                            }),
                       ],
                     ),
                   )
