@@ -12,7 +12,7 @@ class MyMessageCard extends StatelessWidget {
     required this.type,
     required this.onLeftSwipe,
     required this.repliedText,
-    required this.userName,
+    required this.repliedTo,
     required this.repliedMessageType,
     required this.isSeen,
   }) : super(key: key);
@@ -21,7 +21,7 @@ class MyMessageCard extends StatelessWidget {
   final MessageEnum type;
   final void Function() onLeftSwipe;
   final String repliedText;
-  final String userName;
+  final String repliedTo;
   final MessageEnum repliedMessageType;
   final bool isSeen;
 
@@ -62,7 +62,7 @@ class MyMessageCard extends StatelessWidget {
                     children: [
                       if (isReplying) ...[
                         Text(
-                          userName,
+                          repliedTo,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 6.0),

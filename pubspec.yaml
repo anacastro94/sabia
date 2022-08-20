@@ -46,6 +46,7 @@ dependencies:
   enough_giphy_flutter: ^0.3.0
   swipe_to: ^1.0.2
   emoji_picker_flutter: ^1.3.1
+  audio_video_progress_bar: ^0.10.0
 
 
 dev_dependencies:
@@ -74,6 +75,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/covers/
     - assets/noises/
     - assets/samples/
   fonts:

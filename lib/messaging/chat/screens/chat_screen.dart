@@ -29,7 +29,16 @@ class ChatScreen extends ConsumerWidget {
       backgroundColor: kAntiqueWhite,
       appBar: AppBar(
         title: isGroupChat
-            ? Text(name)
+            ? Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(profilePicture),
+                    backgroundColor: kAntiqueWhite,
+                  ),
+                  const SizedBox(width: 24.0),
+                  Text(name),
+                ],
+              )
             : StreamBuilder<UserModel>(
                 stream: ref.watch(authControllerProvider).getUserDataById(uid),
                 builder: (context, snapshot) {

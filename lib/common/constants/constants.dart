@@ -5,7 +5,7 @@ const String kLogoTag = 'logo';
 
 const Color kGreenLight = Color(0xFFF3F5EC);
 const Color kGreenOlivine = Color(0xFFA7BC79);
-const Color kAntiqueWhite = Color(0xFFFFF0DD);
+const Color kAntiqueWhite = Color(0xFFFFFCF7);
 const Color kDarkOrange = Color(0xFFFE8900);
 const Color kBlackOlive = Color(0xFF4C483D);
 const Color kGrey = Color(0xFF89745F);

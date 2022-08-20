@@ -10,7 +10,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../auth/controller/auth_controller.dart';
 import '../../../models/message.dart';
+import '../../../models/user_model.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   const ChatList({
@@ -104,22 +106,35 @@ class _ChatListState extends ConsumerState<ChatList> {
                                 messageData.type,
                               ),
                           repliedText: messageData.repliedMessage,
-                          userName: messageData.repliedTo,
+                          repliedTo: messageData.repliedTo,
                           repliedMessageType: messageData.repliedMessageType,
                           isSeen: messageData.isSeen);
                     }
-                    return SenderMessageCard(
-                        message: messageData.text,
-                        date: timeSent,
-                        type: messageData.type,
-                        onRightSwipe: () => onMessageSwipe(
+                    return StreamBuilder<UserModel>(
+                        stream: ref
+                            .watch(authControllerProvider)
+                            .getUserDataById(messageData.senderId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox();
+                          }
+                          return SenderMessageCard(
+                            message: messageData.text,
+                            date: timeSent,
+                            type: messageData.type,
+                            onRightSwipe: () => onMessageSwipe(
                               messageData.text,
                               false,
                               messageData.type,
                             ),
-                        repliedText: messageData.repliedMessage,
-                        userName: messageData.repliedTo,
-                        repliedMessageType: messageData.repliedMessageType);
+                            repliedText: messageData.repliedMessage,
+                            repliedTo: messageData.repliedTo,
+                            repliedMessageType: messageData.repliedMessageType,
+                            isGroupChat: widget.isGroupChat,
+                            senderName: snapshot.data!.name,
+                          );
+                        });
                   },
                 );
               },

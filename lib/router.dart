@@ -7,9 +7,12 @@ import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
 import 'package:bbk_final_ana/screens/home_screen.dart';
 import 'package:bbk_final_ana/audio/screens/initial_decision_screen.dart';
 import 'package:bbk_final_ana/auth/screens/user_info_screen.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
+import 'audio/screens/library_screen.dart';
+import 'audio/screens/player_screen.dart';
+import 'audio/screens/recorder_screen.dart';
 import 'auth/screens/edit_user_info_screen.dart';
 import 'auth/screens/registration_screen.dart';
 import 'messaging/select_contacts/screens/select_user_contact_screen.dart';
@@ -44,6 +47,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case CreateGroupScreen.id:
       return MaterialPageRoute(builder: (context) => const CreateGroupScreen());
+
+    case LibraryScreen.id:
+      return MaterialPageRoute(builder: (context) => const LibraryScreen());
+
+    case PlayerScreen.id:
+      return MaterialPageRoute(builder: (context) => const PlayerScreen());
+
+    case RecorderScreen.id:
+      return MaterialPageRoute(builder: (context) => const RecorderScreen());
 
     case ChatScreen.id:
       final args = settings.arguments as Map<String, dynamic>;

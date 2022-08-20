@@ -98,6 +98,7 @@ class ChatRepository {
         var message = Message.fromMap(document.data());
         messages.add(message);
       }
+
       return messages;
     });
   }
@@ -186,7 +187,7 @@ class ChatRepository {
       await firestore
           .collection('groups')
           .doc(receiverId)
-          .collection('chat')
+          .collection('chats')
           .doc(messageId)
           .set(
             message.toMap(),

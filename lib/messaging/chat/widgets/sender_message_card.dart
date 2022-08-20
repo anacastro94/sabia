@@ -13,16 +13,20 @@ class SenderMessageCard extends StatelessWidget {
     required this.type,
     required this.onRightSwipe,
     required this.repliedText,
-    required this.userName,
+    required this.repliedTo,
     required this.repliedMessageType,
+    required this.isGroupChat,
+    required this.senderName,
   }) : super(key: key);
   final String message;
   final String date;
   final MessageEnum type;
   final void Function() onRightSwipe;
   final String repliedText;
-  final String userName;
+  final String repliedTo;
   final MessageEnum repliedMessageType;
+  final bool isGroupChat;
+  final String senderName;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +63,15 @@ class SenderMessageCard extends StatelessWidget {
                         ),
                   child: Column(
                     children: [
+                      if (isGroupChat) ...[
+                        Text(
+                          senderName,
+                          style: const TextStyle(color: kGrey),
+                        )
+                      ],
                       if (isReplying) ...[
                         Text(
-                          userName,
+                          repliedTo,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 3.0),

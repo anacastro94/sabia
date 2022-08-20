@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../common/constants/constants.dart';
-import '../../../common/screens/loader_screen.dart';
 
 class ConversationsList extends ConsumerWidget {
   const ConversationsList({Key? key}) : super(key: key);
@@ -17,6 +16,13 @@ class ConversationsList extends ConsumerWidget {
       builder: (context, constraints) => SingleChildScrollView(
         child: Column(
           children: [
+            const Text(
+              'Groups',
+              style: TextStyle(color: kBlackOlive),
+            ),
+            const Divider(
+              color: kAntiqueWhite,
+            ),
             Container(
               constraints: BoxConstraints(maxHeight: constraints.maxHeight),
               child: StreamBuilder<List<Group>>(
@@ -79,13 +85,20 @@ class ConversationsList extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          const Divider(indent: 85.0)
                         ],
                       );
                     },
                   );
                 },
               ),
+            ),
+            const SizedBox(height: 12.0),
+            const Text(
+              'People',
+              style: TextStyle(color: kBlackOlive),
+            ),
+            const Divider(
+              color: kAntiqueWhite,
             ),
             Container(
               constraints: BoxConstraints(maxHeight: constraints.maxHeight),
@@ -151,7 +164,6 @@ class ConversationsList extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const Divider(indent: 85.0)
                           ],
                         );
                       },

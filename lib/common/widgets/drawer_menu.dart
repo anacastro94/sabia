@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/messaging/conversations/screens/conversations_screen.dart';
 import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
@@ -27,6 +28,14 @@ class DrawerMenu extends ConsumerWidget {
       child: ListView(
         children: [
           const StandardDrawerHeader(),
+          ListTile(
+            leading: const Icon(Icons.menu_book_outlined),
+            title: const Text(
+              'Library',
+              style: kTextStyleMenuItem,
+            ),
+            onTap: () => Navigator.pushNamed(context, LibraryScreen.id),
+          ),
           ListTile(
             leading: const Icon(Icons.comment),
             title: const Text(
