@@ -1,12 +1,12 @@
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:bbk_final_ana/audio/controller/player_controller.dart';
+import 'package:bbk_final_ana/audio/widgets/current_audio_title.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../widgets/audio_control_buttons.dart';
 import '../widgets/audio_progress_bar.dart';
-import '../widgets/play_button.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -17,8 +17,8 @@ class PlayerScreen extends ConsumerStatefulWidget {
 }
 
 class _PlayerScreenState extends ConsumerState<PlayerScreen> {
-  final String storyTitle = 'A long story title';
-  final String senderName = 'Sender Name';
+  final String senderName =
+      'Sender Name'; //TODO: Replace by controller pattern (same for the title)
   late final AudioPlayerController _playerController;
 
   @override
@@ -77,14 +77,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               child: Column(
                 children: [
                   SizedBox(height: screenHeight * 0.1),
-                  Text(
-                    storyTitle.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: kBlackOlive,
-                    ),
-                  ),
+                  const CurrentAudioTitle(),
                   Text(
                     senderName,
                     style: const TextStyle(
@@ -98,7 +91,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     child: Column(
                       children: const [
                         AudioProgressBar(),
-                        PlayButton(),
+                        AudioControlButtons(),
                       ],
                     ),
                   )

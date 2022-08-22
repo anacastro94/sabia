@@ -15,7 +15,7 @@ class AudioPlayerController {
   final playButtonNotifier = PlayButtonNotifier();
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
-  final currentAudioTitleNotifier = ValueNotifier<String>('');
+  final currentAudioTitleNotifier = ValueNotifier<String>('A long story title');
   final playListNotifier = ValueNotifier<List<String>>([]);
   final isFirstAudioNotifier = ValueNotifier<bool>(true);
   final isLastAudioNotifier = ValueNotifier<bool>(true);
