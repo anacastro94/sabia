@@ -1,48 +1,66 @@
+import 'package:bbk_final_ana/audio/notifier/play_button_notifier.dart';
+import 'package:bbk_final_ana/audio/notifier/progress_notifier.dart';
+import 'package:bbk_final_ana/audio/notifier/repeat_button_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../enums/play_button_enum.dart';
-import '../provider/player_progress_state.dart';
+import '../notifier/player_progress_state.dart';
+
+final audioPlayerControllerProvider =
+    Provider((ref) => AudioPlayerController());
 
 class AudioPlayerController {
+  final playButtonNotifier = PlayButtonNotifier();
+  final progressNotifier = ProgressNotifier();
+  final repeatButtonNotifier = RepeatButtonNotifier();
+  final currentAudioTitleNotifier = ValueNotifier<String>('');
+  final playListNotifier = ValueNotifier<List<String>>([]);
+  final isFirstAudioNotifier = ValueNotifier<bool>(true);
+  final isLastAudioNotifier = ValueNotifier<bool>(true);
+  final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+  late AudioPlayer _audioPlayer;
+
   AudioPlayerController() {
     _init();
   }
-
-  static const url =
-      'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'; //TODO: Delete after testing
-  late AudioPlayer _audioPlayer;
-
-  final progressNotifier =
-      ValueNotifier<PlayerProgressState>(PlayerProgressState(
-    current: Duration.zero,
-    buffered: Duration.zero,
-    total: Duration.zero,
-  ));
-
-  final buttonNotifier =
-      ValueNotifier<PlayerButtonState>(PlayerButtonState.paused);
-
   void _init() async {
     _audioPlayer = AudioPlayer();
-    await _audioPlayer.setUrl(url);
+    _setInitialPlaylist();
+    _listenForChangesInPlayerState();
+    _listenForChangesInPlayerPosition();
+    _listenForChangesInBufferedPosition();
+    _listenForChangesInTotalDuration();
+    _listenForChangesInSequenceState();
+  }
 
+  //TODO: Set playlist
+  void _setInitialPlaylist() async {
+    const url =
+        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'; //TODO: Delete after testing
+    await _audioPlayer.setUrl(url);
+  }
+
+  void _listenForChangesInPlayerState() {
     _audioPlayer.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
       final processingState = playerState.processingState;
       if (processingState == ProcessingState.loading ||
           processingState == ProcessingState.buffering) {
-        buttonNotifier.value = PlayerButtonState.loading;
+        playButtonNotifier.value = PlayerButtonState.loading;
       } else if (!isPlaying) {
-        buttonNotifier.value = PlayerButtonState.paused;
+        playButtonNotifier.value = PlayerButtonState.paused;
       } else if (processingState != ProcessingState.completed) {
-        buttonNotifier.value = PlayerButtonState.playing;
+        playButtonNotifier.value = PlayerButtonState.playing;
       } else {
         _audioPlayer.seek(Duration.zero);
         _audioPlayer.pause();
       }
     });
+  }
 
+  void _listenForChangesInPlayerPosition() {
     _audioPlayer.positionStream.listen((position) {
       final oldState = progressNotifier.value;
       progressNotifier.value = PlayerProgressState(
@@ -51,7 +69,9 @@ class AudioPlayerController {
         total: oldState.total,
       );
     });
+  }
 
+  void _listenForChangesInBufferedPosition() {
     _audioPlayer.bufferedPositionStream.listen((bufferedPosition) {
       final oldState = progressNotifier.value;
       progressNotifier.value = PlayerProgressState(
@@ -60,7 +80,9 @@ class AudioPlayerController {
         total: oldState.total,
       );
     });
+  }
 
+  void _listenForChangesInTotalDuration() {
     _audioPlayer.durationStream.listen((totalDuration) {
       final oldState = progressNotifier.value;
       progressNotifier.value = PlayerProgressState(
@@ -70,6 +92,8 @@ class AudioPlayerController {
       );
     });
   }
+
+  void _listenForChangesInSequenceState() {}
 
   void play() {
     _audioPlayer.play();
@@ -85,5 +109,24 @@ class AudioPlayerController {
 
   void seek(Duration position) {
     _audioPlayer.seek(position);
+  }
+
+  void onRepeatButtonPressed() {
+    //TODO
+  }
+  void onPreviousAudioButtonPressed() {
+    //TODO
+  }
+  void onNextAudioButtonPressed() {
+    //TODO
+  }
+  void onShuffleButtonPressed() async {
+    //TODO
+  }
+  void addSong() {
+    //TODO
+  }
+  void removeSong() {
+    //TODO
   }
 }

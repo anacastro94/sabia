@@ -1,5 +1,5 @@
 class PlayerProgressState {
-  PlayerProgressState({
+  const PlayerProgressState({
     required this.current,
     required this.buffered,
     required this.total,

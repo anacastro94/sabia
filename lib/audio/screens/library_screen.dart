@@ -198,9 +198,12 @@ class _PlayerScreenState extends ConsumerState<LibraryScreen>
                                                     .download_for_offline_outlined,
                                                 color: kBlackOlive,
                                               )),
-                                          const Icon(
-                                            Icons.fiber_new,
-                                            color: kDarkOrange,
+                                          const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.fiber_new,
+                                              color: kDarkOrange,
+                                            ),
                                           ),
                                         ],
                                       )
