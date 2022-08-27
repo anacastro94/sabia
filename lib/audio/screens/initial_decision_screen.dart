@@ -1,3 +1,4 @@
+import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +45,7 @@ class InitialDecisionScreen extends StatelessWidget {
                 RoundedButtonSecondary(
                   title: 'Record a story',
                   onPressed: () {
-                    Navigator.pushNamed(context, HomeScreen.id);
+                    Navigator.pushNamed(context, LibraryScreen.id);
                   },
                 ),
               ],

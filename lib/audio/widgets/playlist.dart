@@ -9,19 +9,18 @@ class Playlist extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playerController = ref.read(audioPlayerControllerProvider);
-    return Expanded(
-      child: ValueListenableBuilder<List<String>>(
-        valueListenable: playerController.playListNotifier,
-        builder: (context, playlistTitles, _) {
-          return ListView.builder(
-              itemCount: playlistTitles.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(playlistTitles[index]),
-                );
-              });
-        },
-      ),
+    return ValueListenableBuilder<List<String>>(
+      valueListenable: playerController.playListNotifier,
+      builder: (context, playlistTitles, _) {
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: playlistTitles.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(playlistTitles[index]),
+              );
+            });
+      },
     );
   }
 }

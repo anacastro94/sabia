@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
+import 'package:bbk_final_ana/common/widgets/standar_circular_profile_avatar.dart';
+import 'package:bbk_final_ana/common/widgets/standard_circular_progress_indicator.dart';
 import 'package:bbk_final_ana/messaging/conversations/screens/conversations_screen.dart';
 import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/controller/auth_controller.dart';
 import '../../auth/screens/edit_user_info_screen.dart';
 import '../../models/user_model.dart';
+import 'circular_cached_network_image.dart';
 
 class DrawerMenu extends ConsumerWidget {
   const DrawerMenu({
@@ -23,7 +27,10 @@ class DrawerMenu extends ConsumerWidget {
     }
 
     return Drawer(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.0),
+              bottomLeft: Radius.circular(24.0))),
       backgroundColor: kAntiqueWhite,
       child: ListView(
         children: [
@@ -104,16 +111,11 @@ class _StandardDrawerHeaderState extends ConsumerState<StandardDrawerHeader> {
       child: Column(
         children: [
           user != null
-              ? CircleAvatar(
+              ? CircularCachedNetworkImage(
+                  imageUrl: user!.profilePicture,
                   radius: 42.0,
-                  backgroundColor: kAntiqueWhite,
-                  backgroundImage: NetworkImage(user!.profilePicture),
                 )
-              : const CircleAvatar(
-                  radius: 42.0,
-                  backgroundColor: kAntiqueWhite,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
+              : const StandardCircularProfileAvatar(radius: 42.0),
           const SizedBox(
             height: 12.0,
           ),

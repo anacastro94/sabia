@@ -1,6 +1,4 @@
 import 'package:bbk_final_ana/messaging/select_contacts/repository/select_contact_repository.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final getUserContactsProvider = FutureProvider((ref) {

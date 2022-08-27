@@ -1,4 +1,4 @@
-import 'package:bbk_final_ana/audio/notifier/player_progress_state.dart';
+import 'package:bbk_final_ana/audio/notifiers/player_progress_state.dart';
 import 'package:flutter/material.dart';
 
 class ProgressNotifier extends ValueNotifier<PlayerProgressState> {

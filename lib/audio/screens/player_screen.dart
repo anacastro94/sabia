@@ -5,8 +5,11 @@ import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../widgets/add_remove_to_playlist_buttons.dart';
 import '../widgets/audio_control_buttons.dart';
 import '../widgets/audio_progress_bar.dart';
+import '../widgets/current_audio_artwork.dart';
+import '../widgets/current_audio_author.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -52,16 +55,13 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             top: screenHeight * 0.3,
             left: 0.0,
             right: 0.0,
-            height: screenHeight * 0.7,
+            height: screenHeight * 0.6,
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24.0),
-                border: Border.all(
-                  color: kGreenLight,
-                  width: 2.0,
-                ),
+              decoration: const BoxDecoration(
                 color: kGreenLight,
               ),
+              alignment: Alignment.bottomCenter,
+              child: const AddRemoveToPlaylist(),
             ),
           ),
           Positioned(
@@ -78,13 +78,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 children: [
                   SizedBox(height: screenHeight * 0.1),
                   const CurrentAudioTitle(),
-                  Text(
-                    senderName,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      color: kGrey,
-                    ),
-                  ),
+                  const CurrentAudioAuthorSubtitle(),
                   const SizedBox(height: 24.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 36.0),
@@ -113,17 +107,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 ),
                 color: kGreenLight,
               ),
-              child: const Center(
-                child: CircleAvatar(
-                  backgroundColor: kAntiqueWhite,
-                  radius: 50.0,
-                  child: CircleAvatar(
-                    backgroundColor: kAntiqueWhite,
-                    backgroundImage: AssetImage('assets/images/covers/c1.png'),
-                    radius: 48.0,
-                  ),
-                ),
-              ),
+              child: const CurrentAudioArtwork(),
             ),
           ),
         ],

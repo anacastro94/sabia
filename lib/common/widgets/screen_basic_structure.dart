@@ -7,6 +7,7 @@ class ScreenBasicStructure extends StatelessWidget {
     this.child,
     this.appBar,
     this.floatingActionButton,
+    this.bottomNavigationBar,
     this.backgroundColor,
     this.resizeToAvoidBottomInset,
   }) : super(key: key);
@@ -14,6 +15,7 @@ class ScreenBasicStructure extends StatelessWidget {
   final Widget? child;
   final PreferredSizeWidget? appBar;
   final Widget? floatingActionButton;
+  final Widget? bottomNavigationBar;
   final Color? backgroundColor;
   final bool? resizeToAvoidBottomInset;
 
@@ -23,6 +25,7 @@ class ScreenBasicStructure extends StatelessWidget {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: backgroundColor,
       appBar: appBar,
+      bottomNavigationBar: bottomNavigationBar,
       endDrawer: const DrawerMenu(),
       body: SafeArea(
         child: SizedBox(

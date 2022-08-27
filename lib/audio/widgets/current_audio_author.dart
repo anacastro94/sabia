@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/constants/constants.dart';
 import '../controller/player_controller.dart';
 
-class CurrentAudioTitle extends ConsumerWidget {
-  const CurrentAudioTitle({Key? key}) : super(key: key);
+class CurrentAudioAuthorSubtitle extends ConsumerWidget {
+  const CurrentAudioAuthorSubtitle({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,11 +15,10 @@ class CurrentAudioTitle extends ConsumerWidget {
       valueListenable: playerController.currentAudioMetadataNotifier,
       builder: (context, audioMetadata, _) {
         return Text(
-          audioMetadata.title.toUpperCase(),
+          audioMetadata.author,
           style: const TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-            color: kBlackOlive,
+            fontSize: 16.0,
+            color: kGrey,
           ),
         );
       },

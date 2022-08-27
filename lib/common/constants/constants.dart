@@ -46,4 +46,7 @@ const kTextFieldDecoration = InputDecoration(
 const kStandardProfilePicUrl =
     'https://firebasestorage.googleapis.com/v0/b/bbk-final-project.appspot.com/o/images%2FStandardAvatar.png?alt=media&token=5f0f0d94-2b8a-4b2f-8e65-5d65d3d31da1';
 
+const kLogoUrl =
+    'https://firebasestorage.googleapis.com/v0/b/bbk-final-project.appspot.com/o/images%2FLogo.png?alt=media&token=7055cff2-c88e-4a32-b672-7e625486d61f';
+
 const kGiphyApiKey = 'WSrfRTGSBls6xm1FFiVLVj2g6XcBkZSw';

@@ -7,7 +7,9 @@ import 'package:bbk_final_ana/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/widgets/circular_cached_network_image.dart';
 import '../../common/widgets/screen_basic_structure.dart';
+import '../../common/widgets/standar_circular_profile_avatar.dart';
 import '../../screens/home_screen.dart';
 
 class EditUserInformationScreen extends ConsumerStatefulWidget {
@@ -90,16 +92,12 @@ class _EditUserInformationScreenState
               children: [
                 image == null
                     ? user == null
-                        ? const CircleAvatar(
+                        ? const StandardCircularProfileAvatar(
                             radius: 60.0,
-                            backgroundColor: kAntiqueWhite,
-                            backgroundImage:
-                                AssetImage('assets/images/avatar.png'),
                           )
-                        : CircleAvatar(
+                        : CircularCachedNetworkImage(
+                            imageUrl: user!.profilePicture,
                             radius: 60.0,
-                            backgroundColor: kAntiqueWhite,
-                            backgroundImage: NetworkImage(user!.profilePicture),
                           )
                     : CircleAvatar(
                         radius: 60.0,
