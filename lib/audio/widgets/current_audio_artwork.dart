@@ -20,7 +20,7 @@ class CurrentAudioArtwork extends ConsumerWidget {
             backgroundColor: kAntiqueWhite,
             radius: 50.0,
             child: CircularCachedNetworkImage(
-              imageUrl: audioMetadata.artwork,
+              imageUrl: audioMetadata.artUrl,
               radius: 48.0,
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:bbk_final_ana/audio/controller/audio_handler.dart';
 import 'package:bbk_final_ana/audio/screens/initial_decision_screen.dart';
 import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
@@ -16,6 +17,7 @@ import 'common/screens/loader_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initAudioService();
   runApp(const ProviderScope(child: MyApp()));
 }
 

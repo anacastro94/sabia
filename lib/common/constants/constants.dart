@@ -50,3 +50,20 @@ const kLogoUrl =
     'https://firebasestorage.googleapis.com/v0/b/bbk-final-project.appspot.com/o/images%2FLogo.png?alt=media&token=7055cff2-c88e-4a32-b672-7e625486d61f';
 
 const kGiphyApiKey = 'WSrfRTGSBls6xm1FFiVLVj2g6XcBkZSw';
+
+const String _urlPrefix =
+    'https://firebasestorage.googleapis.com/v0/b/bbk-final-project.appspot.com/o/images';
+
+const List<String> kArtworkUrls = [
+  '$_urlPrefix%2Fc3.png?alt=media&token=56c0c368-36d8-4054-9455-dc9ba82dc8f1'
+      '$_urlPrefix%2Fc2.png?alt=media&token=300a5735-29cf-44e3-a84d-ee1e77446575',
+  '$_urlPrefix%2Fc1.png?alt=media&token=ec4c0419-59fb-40f2-b934-46c51fd37a90',
+  '$_urlPrefix%2Fc4.png?alt=media&token=72b2a76e-22c0-4f9a-af38-26b9e6d878d1',
+  '$_urlPrefix%2Fc5.png?alt=media&token=fed568c3-9e55-424d-8a83-c813291453cb',
+  '$_urlPrefix%2Fc6.png?alt=media&token=aa071c1a-39eb-444c-94b4-119d4593b796',
+  '$_urlPrefix%2Fc7.png?alt=media&token=ba6dc5ab-77cf-47c3-9cbb-2d3800f376d2',
+  '$_urlPrefix%2Fc8.png?alt=media&token=27e345c8-39dd-4f63-8431-6555600f80f0',
+  '$_urlPrefix%2Fc9.png?alt=media&token=ceaff1ac-5a1b-4788-a08c-4ea17bea2f8f',
+  '$_urlPrefix%2Fc10.png?alt=media&token=a8f415f4-8c78-4a22-9b11-e924ba8691ac',
+  '$_urlPrefix%2Fc11.png?alt=media&token=3e69ee71-b2b6-42da-98ab-88780e99159c',
+];
