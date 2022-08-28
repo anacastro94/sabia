@@ -89,7 +89,7 @@ class ChatRepository {
     return firestore
         .collection('groups')
         .doc(groupId)
-        .collection('chats')
+        .collection('messages')
         .orderBy('timeSent')
         .snapshots()
         .map((event) {
@@ -187,7 +187,7 @@ class ChatRepository {
       await firestore
           .collection('groups')
           .doc(receiverId)
-          .collection('chats')
+          .collection('messages')
           .doc(messageId)
           .set(
             message.toMap(),

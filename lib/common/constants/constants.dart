@@ -55,8 +55,8 @@ const String _urlPrefix =
     'https://firebasestorage.googleapis.com/v0/b/bbk-final-project.appspot.com/o/images';
 
 const List<String> kArtworkUrls = [
-  '$_urlPrefix%2Fc3.png?alt=media&token=56c0c368-36d8-4054-9455-dc9ba82dc8f1'
-      '$_urlPrefix%2Fc2.png?alt=media&token=300a5735-29cf-44e3-a84d-ee1e77446575',
+  '$_urlPrefix%2Fc2.png?alt=media&token=300a5735-29cf-44e3-a84d-ee1e77446575',
+  '$_urlPrefix%2Fc3.png?alt=media&token=56c0c368-36d8-4054-9455-dc9ba82dc8f1',
   '$_urlPrefix%2Fc1.png?alt=media&token=ec4c0419-59fb-40f2-b934-46c51fd37a90',
   '$_urlPrefix%2Fc4.png?alt=media&token=72b2a76e-22c0-4f9a-af38-26b9e6d878d1',
   '$_urlPrefix%2Fc5.png?alt=media&token=fed568c3-9e55-424d-8a83-c813291453cb',

@@ -24,10 +24,11 @@ class AudioPlayerController {
   final repeatButtonNotifier = RepeatButtonNotifier();
   final currentAudioMetadataNotifier = ValueNotifier<AudioMetadata>(
       AudioMetadata(author: '', title: '', artUrl: kLogoUrl, id: '', url: ''));
-  final playListNotifier = ValueNotifier<List<String>>([]);
+  final playListNotifier = ValueNotifier<List<AudioMetadata>>([]);
   final isFirstAudioNotifier = ValueNotifier<bool>(true);
   final isLastAudioNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+  final playerSpeedNotifier = ValueNotifier<double>(1.0);
   late AudioHandler _audioHandler;
   late ConcatenatingAudioSource _playlist;
 
@@ -63,9 +64,28 @@ class AudioPlayerController {
   ///NEW
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
-      if (playlist.isEmpty) return;
-      final newList = playlist.map((item) => item.title).toList();
-      playListNotifier.value = newList;
+      if (playlist.isEmpty) {
+        playListNotifier.value = [];
+        currentAudioMetadataNotifier.value = AudioMetadata(
+          author: '',
+          title: '',
+          artUrl: kLogoUrl,
+          id: '',
+          url: '',
+        );
+      } else {
+        final newList = playlist
+            .map((item) => AudioMetadata(
+                  author: item.artist ?? '',
+                  title: item.title ?? '',
+                  artUrl: item.artUri?.path ?? '',
+                  id: item.id,
+                  url: item.extras?['url'] ?? '',
+                ))
+            .toList();
+        playListNotifier.value = newList;
+      }
+      _updateSkipButtons();
     });
   }
 
@@ -198,26 +218,34 @@ class AudioPlayerController {
     }
   }
 
-  void addAudioToPlaylist() {
-    final songNumber = _playlist.length + 1;
-    //TODO: Get list from database and limit to the size of the list
-    const prefix = 'https://www.soundhelix.com/examples/mp3';
-    final song = Uri.parse('$prefix/SoundHelix-Song-$songNumber.mp3');
-    _playlist.add(AudioSource.uri(song,
-        tag: AudioMetadata(
-          author: 'Author $songNumber',
-          title: 'Song $songNumber',
-          artUrl: kLogoUrl,
-          id: '',
-          url: '',
-        )));
+  void addAudioToPlaylist() async {
+    final playlistRepository = ref.read(playListRepositoryProvider);
+    final audio = await playlistRepository
+        .fetchAnotherAudio(); //TODO: Add an specific audio to playlist
+    final mediaItem = MediaItem(
+      id: audio['id'] ?? ' ',
+      title: audio['title'] ?? ' ',
+      artist: audio['author'] ?? ' ',
+      artUri: Uri.parse(audio['artUrl'] ?? kLogoUrl),
+      extras: {'url': audio['url']},
+    );
+    _audioHandler.addQueueItem(mediaItem);
   }
 
   void removeAudioFromPlaylist() {
     // Removing the final song
     //TODO: Update to remove a selected song
-    final index = _playlist.length - 1;
-    if (index < 0) return;
-    _playlist.removeAt(index);
+    final lastIndex = _audioHandler.queue.value.length - 1;
+    if (lastIndex < 0) return;
+    _audioHandler.removeQueueItemAt(lastIndex);
+  }
+
+  void skipToQueueItem(int index) {
+    _audioHandler.skipToQueueItem(index);
+  }
+
+  void setPlayerSpeed(double speed) async {
+    await _audioHandler.setSpeed(speed);
+    playerSpeedNotifier.value = speed;
   }
 }

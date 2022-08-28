@@ -10,6 +10,7 @@ import '../widgets/audio_control_buttons.dart';
 import '../widgets/audio_progress_bar.dart';
 import '../widgets/current_audio_artwork.dart';
 import '../widgets/current_audio_author.dart';
+import '../widgets/player_bottom_bar.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -49,6 +50,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
+      bottomNavigationBar: const PlayerBottomBar(),
       child: Stack(
         children: [
           Positioned(
@@ -61,7 +63,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 color: kGreenLight,
               ),
               alignment: Alignment.bottomCenter,
-              child: const AddRemoveToPlaylist(),
+              //child: const AddRemoveToPlaylist(),
             ),
           ),
           Positioned(

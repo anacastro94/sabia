@@ -41,6 +41,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             widget.receiverId,
             widget.isGroupChat,
           );
+
       setState(() {
         messageController.text = '';
       });

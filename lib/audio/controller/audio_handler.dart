@@ -32,6 +32,7 @@ class StandardAudioHandler extends BaseAudioHandler {
     _notifyAudioHandlerAboutPlaybackEvents();
     _listenForDurationChanges();
     _listenForCurrentAudioIndexChanges();
+    _listenForSequenceStateChanges();
   }
 
   Future<void> _loadEmptyPlaylist() async {
@@ -44,12 +45,33 @@ class StandardAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
-    // Manage Just_Audio
+    // Manage just_audio
     final audioSource = mediaItems.map(_createAudioSource);
     _playList.addAll(audioSource.toList());
 
     // Notify system
     final newQueue = queue.value..addAll(mediaItems);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> addQueueItem(MediaItem mediaItem) async {
+    //  Manage just_audio
+    final audioSource = _createAudioSource(mediaItem);
+    _playList.add(audioSource);
+
+    // Notify system
+    final newQueue = queue.value..add(mediaItem);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> removeQueueItemAt(int index) async {
+    // Manage just_audio
+    _playList.removeAt(index);
+
+    // Notify system
+    final newQueue = queue.value..removeAt(index);
     queue.add(newQueue);
   }
 
@@ -132,6 +154,9 @@ class StandardAudioHandler extends BaseAudioHandler {
           LoopMode.one: AudioServiceRepeatMode.one,
           LoopMode.all: AudioServiceRepeatMode.all,
         }[_player.loopMode]!,
+        shuffleMode: (_player.shuffleModeEnabled)
+            ? AudioServiceShuffleMode.all
+            : AudioServiceShuffleMode.none,
       ));
     });
   }
@@ -141,6 +166,9 @@ class StandardAudioHandler extends BaseAudioHandler {
       var index = _player.currentIndex;
       final newQueue = queue.value;
       if (index == null || newQueue.isEmpty) return;
+      if (_player.shuffleModeEnabled) {
+        index = _player.shuffleIndices![index];
+      }
       final oldMediaItem = newQueue[index];
       final newMediaItem = oldMediaItem.copyWith(duration: duration);
       newQueue[index] = newMediaItem;
@@ -153,7 +181,43 @@ class StandardAudioHandler extends BaseAudioHandler {
     _player.currentIndexStream.listen((index) {
       final playlist = queue.value;
       if (index == null || playlist.isEmpty) return;
+      if (_player.shuffleModeEnabled) {
+        index = _player.shuffleIndices![index];
+      }
       mediaItem.add(playlist[index]);
     });
+  }
+
+  void _listenForSequenceStateChanges() {
+    _player.sequenceStateStream.listen((SequenceState? sequenceState) {
+      final sequence = sequenceState?.effectiveSequence;
+      if (sequence == null || sequence.isEmpty) return;
+      final items = sequence.map((source) => source.tag as MediaItem);
+      queue.add(items.toList());
+    });
+  }
+
+  @override
+  Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
+    if (shuffleMode == AudioServiceShuffleMode.none) {
+      _player.setShuffleModeEnabled(false);
+    } else {
+      await _player.shuffle();
+      _player.setShuffleModeEnabled(true);
+    }
+  }
+
+  @override
+  Future<void> skipToQueueItem(int index) async {
+    if (index < 0 || index >= queue.value.length) return;
+    if (_player.shuffleModeEnabled) {
+      index = _player.shuffleIndices![index];
+    }
+    _player.seek(Duration.zero, index: index);
+  }
+
+  @override
+  Future<void> setSpeed(double speed) async {
+    await _player.setSpeed(speed);
   }
 }
