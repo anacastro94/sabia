@@ -1,5 +1,7 @@
 import 'package:bbk_final_ana/common/enums/message_enum.dart';
 
+import 'audio_metadata.dart';
+
 class Message {
   final String senderId;
   final String receiverId;
@@ -11,6 +13,7 @@ class Message {
   final String repliedMessage;
   final String repliedTo;
   final MessageEnum repliedMessageType;
+  final AudioMetadata? metadata;
 
   Message({
     required this.senderId,
@@ -23,6 +26,7 @@ class Message {
     required this.repliedMessage,
     required this.repliedTo,
     required this.repliedMessageType,
+    this.metadata,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,7 +40,8 @@ class Message {
       'isSeen': isSeen,
       'repliedMessage': repliedMessage,
       'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType.type
+      'repliedMessageType': repliedMessageType.type,
+      'metadata': metadata?.toMap(),
     };
   }
 
@@ -52,6 +57,7 @@ class Message {
       repliedMessage: map['repliedMessage'] ?? '',
       repliedTo: map['repliedTo'] ?? '',
       repliedMessageType: (map['repliedMessageType'] as String).toEnum(),
+      metadata: map['metadata'],
     );
   }
 }

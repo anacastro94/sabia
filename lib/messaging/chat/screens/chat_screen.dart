@@ -78,7 +78,7 @@ class ChatScreen extends ConsumerWidget {
       child: Column(
         children: [
           Expanded(
-            child: ChatList(receiverId: uid, isGroupChat: isGroupChat), //TODO
+            child: ChatList(receiverId: uid, isGroupChat: isGroupChat),
           ),
           BottomChatField(isGroupChat: isGroupChat, receiverId: uid),
         ],

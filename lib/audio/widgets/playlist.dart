@@ -5,35 +5,31 @@ import '../../common/constants/constants.dart';
 import '../../common/widgets/square_cached_network_image.dart';
 import '../../models/audio_metadata.dart';
 import '../controller/player_controller.dart';
+import 'list_header.dart';
 
-class Playlist extends ConsumerWidget {
+class Playlist extends StatelessWidget {
   const Playlist({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final playerController = ref.read(audioPlayerControllerProvider);
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const ListHeader(title: 'Now playing'),
-        NowPlayingTile(playerController: playerController),
-        const ListHeader(title: 'Playlist from your library'),
-        ListViewPlaylist(playerController: playerController),
+      children: const [
+        ListHeader(title: 'Now playing'),
+        NowPlayingTile(),
+        ListHeader(title: 'Playlist from your library'),
+        ListViewPlaylist(),
       ],
     );
   }
 }
 
-class ListViewPlaylist extends StatelessWidget {
-  const ListViewPlaylist({
-    Key? key,
-    required this.playerController,
-  }) : super(key: key);
-
-  final AudioPlayerController playerController;
+class ListViewPlaylist extends ConsumerWidget {
+  const ListViewPlaylist({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerController = ref.read(audioPlayerControllerProvider);
     return ValueListenableBuilder<List<AudioMetadata>>(
       valueListenable: playerController.playListNotifier,
       builder: (context, playlist, _) {
@@ -43,13 +39,16 @@ class ListViewPlaylist extends StatelessWidget {
               itemCount: playlist.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: const Icon(
-                    Icons.radio_button_unchecked,
-                    color: kGrey,
-                  ),
                   onTap: () => playerController.skipToQueueItem(index),
                   title: Text(playlist[index].title),
                   subtitle: Text(playlist[index].author),
+                  trailing: IconButton(
+                      onPressed: () =>
+                          playerController.removeAudioFromPlaylist(index),
+                      icon: const Icon(
+                        Icons.remove_circle,
+                        color: Colors.red,
+                      )),
                 );
               }),
         );
@@ -58,16 +57,14 @@ class ListViewPlaylist extends StatelessWidget {
   }
 }
 
-class NowPlayingTile extends StatelessWidget {
+class NowPlayingTile extends ConsumerWidget {
   const NowPlayingTile({
     Key? key,
-    required this.playerController,
   }) : super(key: key);
 
-  final AudioPlayerController playerController;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerController = ref.read(audioPlayerControllerProvider);
     return ValueListenableBuilder<AudioMetadata>(
       valueListenable: playerController.currentAudioMetadataNotifier,
       builder: (context, audioMetadata, _) {
@@ -88,26 +85,6 @@ class NowPlayingTile extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class ListHeader extends StatelessWidget {
-  const ListHeader({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12.0, top: 24.0, bottom: 12.0),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18.0,
-          color: kBlackOlive,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 }

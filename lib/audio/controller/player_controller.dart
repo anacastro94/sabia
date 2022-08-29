@@ -55,7 +55,10 @@ class AudioPlayerController {
               title: audio['title'] ?? ' ',
               artist: audio['author'] ?? ' ',
               artUri: Uri.parse(audio['artUrl'] ?? kLogoUrl),
-              extras: {'url': audio['url']},
+              extras: {
+                'url': audio['url'],
+                'isFavorite': audio['isFavorite'],
+              },
             ))
         .toList();
     _audioHandler.addQueueItems(mediaItems);
@@ -81,6 +84,7 @@ class AudioPlayerController {
                   artUrl: item.artUri?.path ?? '',
                   id: item.id,
                   url: item.extras?['url'] ?? '',
+                  isFavorite: item.extras?['isFavorite'],
                 ))
             .toList();
         playListNotifier.value = newList;
@@ -166,6 +170,7 @@ class AudioPlayerController {
         title: mediaItem?.title ?? '',
         artUrl: mediaItem?.artUri?.toString() ?? '',
         url: mediaItem?.extras!['url'] ?? '',
+        isFavorite: mediaItem?.extras?['isFavorite'],
       );
       _updateSkipButtons();
     });
@@ -227,17 +232,18 @@ class AudioPlayerController {
       title: audio['title'] ?? ' ',
       artist: audio['author'] ?? ' ',
       artUri: Uri.parse(audio['artUrl'] ?? kLogoUrl),
-      extras: {'url': audio['url']},
+      extras: {
+        'url': audio['url'],
+        'isFavorite': audio['isFavorite'],
+      },
     );
     _audioHandler.addQueueItem(mediaItem);
   }
 
-  void removeAudioFromPlaylist() {
-    // Removing the final song
-    //TODO: Update to remove a selected song
+  void removeAudioFromPlaylist(int index) {
     final lastIndex = _audioHandler.queue.value.length - 1;
     if (lastIndex < 0) return;
-    _audioHandler.removeQueueItemAt(lastIndex);
+    _audioHandler.removeQueueItemAt(index);
   }
 
   void skipToQueueItem(int index) {

@@ -29,10 +29,6 @@ class AddRemoveToPlaylist extends ConsumerWidget {
               icon: const Icon(Icons.add),
             ),
             IconButton(
-              onPressed: playerController.removeAudioFromPlaylist,
-              icon: const Icon(Icons.remove),
-            ),
-            IconButton(
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,

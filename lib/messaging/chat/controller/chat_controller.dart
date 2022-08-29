@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/messaging/chat/repository/chat_repository.dart';
+import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:bbk_final_ana/models/chat_contact.dart';
 import 'package:bbk_final_ana/models/message.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,8 +33,8 @@ class ChatController {
     return chatRepository.getChatGroups();
   }
 
-  Stream<List<Message>> getChatStream(String receiverUserId) {
-    return chatRepository.getChatStream(receiverUserId);
+  Stream<List<Message>> getChatStream(String receiverId) {
+    return chatRepository.getChatStream(receiverId);
   }
 
   Stream<List<Message>> getGroupChatStream(String groupId) {
@@ -64,18 +65,22 @@ class ChatController {
     String receiverId,
     MessageEnum messageEnum,
     bool isGroupChat,
+    AudioMetadata metadata,
   ) {
     final messageReply = ref.read(messageReplyProvider);
-    ref.read(userDataAuthProvider).whenData((value) =>
-        chatRepository.sendAudioMessage(
-            context: context,
-            audioFile: audioFile,
-            receiverId: receiverId,
-            sender: value!,
-            ref: ref,
-            messageEnum: messageEnum,
-            messageReply: messageReply,
-            isGroupChat: isGroupChat));
+    ref
+        .read(userDataAuthProvider)
+        .whenData((value) => chatRepository.sendAudioMessage(
+              context: context,
+              audioFile: audioFile,
+              receiverId: receiverId,
+              sender: value!,
+              ref: ref,
+              messageEnum: messageEnum,
+              messageReply: messageReply,
+              isGroupChat: isGroupChat,
+              metadata: metadata,
+            ));
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 
@@ -92,7 +97,7 @@ class ChatController {
     ref.read(userDataAuthProvider).whenData((value) =>
         chatRepository.sendGifMessage(
             context: context,
-            gifUrl: gifUrl,
+            gifUrl: newGifUrl,
             receiverId: receiverId,
             sender: value!,
             messageReply: messageReply,
@@ -101,10 +106,10 @@ class ChatController {
   }
 
   void setChatMessageSeen(
-      BuildContext context, String receiverId, String messageId) {
+      BuildContext context, String senderId, String messageId) {
     chatRepository.setChatMessageSeen(
       context: context,
-      receiverId: receiverId,
+      senderId: senderId,
       messageId: messageId,
     );
   }

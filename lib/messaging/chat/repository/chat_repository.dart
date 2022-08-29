@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bbk_final_ana/common/providers/message_reply_provider.dart';
 import 'package:bbk_final_ana/common/repositories/common_firestore_repository.dart';
+import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:bbk_final_ana/models/chat_contact.dart';
 import 'package:bbk_final_ana/models/group.dart';
 import 'package:bbk_final_ana/models/user_model.dart';
@@ -66,12 +67,12 @@ class ChatRepository {
     });
   }
 
-  Stream<List<Message>> getChatStream(String receiverUserId) {
+  Stream<List<Message>> getChatStream(String receiverId) {
     return firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
         .collection('chats')
-        .doc(receiverUserId)
+        .doc(receiverId)
         .collection('messages')
         .orderBy('timeSent')
         .snapshots()
@@ -164,6 +165,7 @@ class ChatRepository {
     required String senderName,
     required String? receiverName,
     required bool isGroupChat,
+    AudioMetadata? metadata,
   }) async {
     final message = Message(
       senderId: auth.currentUser!.uid,
@@ -181,6 +183,7 @@ class ChatRepository {
               : receiverName ?? '',
       repliedMessageType:
           messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+      metadata: metadata,
     );
     if (isGroupChat) {
       // groups -> groupId -> chat -> message
@@ -270,6 +273,7 @@ class ChatRepository {
     required MessageEnum messageEnum,
     required MessageReply? messageReply,
     required bool isGroupChat,
+    required AudioMetadata metadata,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -291,7 +295,7 @@ class ChatRepository {
       _saveDataToContactsSubCollection(
           sender: sender,
           receiver: receiver,
-          text: '🎵 Audio',
+          text: '📙 Audio 🎵',
           timeSent: timeSent,
           receiverId: receiverId,
           isGroupChat: isGroupChat);
@@ -356,7 +360,7 @@ class ChatRepository {
 
   void setChatMessageSeen({
     required BuildContext context,
-    required String receiverId,
+    required String senderId,
     required String messageId,
   }) async {
     try {
@@ -364,19 +368,101 @@ class ChatRepository {
           .collection('users')
           .doc(auth.currentUser!.uid)
           .collection('chats')
-          .doc(receiverId)
+          .doc(senderId)
           .collection('messages')
           .doc(messageId)
           .update({'isSeen': true});
 
       await firestore
           .collection('users')
-          .doc(receiverId)
+          .doc(senderId)
           .collection('chats')
           .doc(auth.currentUser!.uid)
           .collection('messages')
           .doc(messageId)
           .update({'isSeen': true});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  /// Function to toggle the isFavorite of the audio message.
+  /// Only the current user as receiver of the message can toggle.
+  /// Still, the message will be update for the sender and receiver.
+  void toggleAudioMessageFavorite({
+    required BuildContext context,
+    required String senderId,
+    required String messageId,
+  }) async {
+    try {
+      final messageData = await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(senderId)
+          .collection('messages')
+          .doc(messageId)
+          .get();
+      final message = Message.fromMap(messageData.data()!);
+      final isFavorite = message.metadata!.isFavorite;
+      void updateMessageInFirestore(
+              String uid1, String uid2, bool isFavorite) async =>
+          await firestore
+              .collection('users')
+              .doc(uid1)
+              .collection('chats')
+              .doc(uid2)
+              .collection('messages')
+              .doc(messageId)
+              .update({
+            'metadata': {'isFavorite': isFavorite}
+          });
+
+      if (isFavorite) {
+        // Update in the message for the receiver (current user)
+        updateMessageInFirestore(auth.currentUser!.uid, senderId, false);
+        // await firestore
+        //     .collection('users')
+        //     .doc(auth.currentUser!.uid)
+        //     .collection('chats')
+        //     .doc(senderId)
+        //     .collection('messages')
+        //     .doc(messageId)
+        //     .update({'metadata' : {'isFavorite' : false}});
+
+        // Update in the message for the sender
+        updateMessageInFirestore(senderId, auth.currentUser!.uid, false);
+        // await firestore
+        //     .collection('users')
+        //     .doc(senderId)
+        //     .collection('chats')
+        //     .doc(auth.currentUser!.uid)
+        //     .collection('messages')
+        //     .doc(messageId)
+        //     .update({'metadata' : {'isFavorite' : false}});
+      } else {
+        // Update in the message for the receiver (current user)
+        updateMessageInFirestore(auth.currentUser!.uid, senderId, true);
+        // await firestore
+        //     .collection('users')
+        //     .doc(auth.currentUser!.uid)
+        //     .collection('chats')
+        //     .doc(senderId)
+        //     .collection('messages')
+        //     .doc(messageId)
+        //     .update({'metadata' : {'isFavorite' : true}});
+
+        // Update in the message for the sender
+        updateMessageInFirestore(senderId, auth.currentUser!.uid, false);
+        // await firestore
+        //     .collection('users')
+        //     .doc(senderId)
+        //     .collection('chats')
+        //     .doc(auth.currentUser!.uid)
+        //     .collection('messages')
+        //     .doc(messageId)
+        //     .update({'metadata' : {'isFavorite' : true}});
+      }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

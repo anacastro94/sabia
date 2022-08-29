@@ -1,10 +1,12 @@
 import 'package:bbk_final_ana/audio/widgets/player_speed_list.dart';
 import 'package:bbk_final_ana/audio/widgets/playlist.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
+import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/player_controller.dart';
+import 'favorite_icon.dart';
 
 class PlayerBottomBar extends ConsumerWidget {
   const PlayerBottomBar({Key? key}) : super(key: key);
@@ -12,7 +14,6 @@ class PlayerBottomBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playerController = ref.read(audioPlayerControllerProvider);
-
     void onItemTapped(int index) {
       switch (index) {
         case (0):
@@ -29,10 +30,9 @@ class PlayerBottomBar extends ConsumerWidget {
           );
           break;
         case (1):
-          playerController.addAudioToPlaylist();
           break;
         case (2):
-          playerController.removeAudioFromPlaylist();
+          playerController.addAudioToPlaylist();
           break;
         case (3):
           showModalBottomSheet(
@@ -72,12 +72,12 @@ class PlayerBottomBar extends ConsumerWidget {
             ),
             label: '    x'),
         const BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: 'Add',
+          icon: FavoriteIcon(),
+          label: 'Favorite',
         ),
         const BottomNavigationBarItem(
-          icon: Icon(Icons.remove),
-          label: 'Remove',
+          icon: Icon(Icons.add),
+          label: 'Add',
         ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.featured_play_list_outlined),
