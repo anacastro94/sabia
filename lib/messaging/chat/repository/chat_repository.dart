@@ -165,7 +165,6 @@ class ChatRepository {
     required String senderName,
     required String? receiverName,
     required bool isGroupChat,
-    AudioMetadata? metadata,
   }) async {
     final message = Message(
       senderId: auth.currentUser!.uid,
@@ -183,7 +182,6 @@ class ChatRepository {
               : receiverName ?? '',
       repliedMessageType:
           messageReply == null ? MessageEnum.text : messageReply.messageEnum,
-      metadata: metadata,
     );
     if (isGroupChat) {
       // groups -> groupId -> chat -> message
@@ -224,35 +222,29 @@ class ChatRepository {
 
   void _saveAudioToSubCollection({
     required String receiverId,
-    required String text,
-    required DateTime timeSent,
     required String messageId,
-    required String userName,
-    required MessageEnum messageType,
-    required MessageReply? messageReply,
-    required String senderName,
-    required String? receiverName,
     required bool isGroupChat,
-    AudioMetadata? metadata,
+    required AudioMetadata audioMetadata,
   }) async {
-    final message = Message(
-      senderId: auth.currentUser!.uid,
-      receiverId: receiverId,
-      text: text,
-      type: messageType,
-      timeSent: timeSent,
-      messageId: messageId,
-      isSeen: false,
-      repliedMessage: messageReply == null ? '' : messageReply.message,
-      repliedTo: messageReply == null
-          ? ''
-          : messageReply.isMe
-              ? senderName
-              : receiverName ?? '',
-      repliedMessageType:
-          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
-      metadata: metadata,
-    );
+    // final audio = AudioMetadata(id: messageId, author: author, title: title, artUrl: artUrl, url: url);
+    //
+    // Message(
+    //   senderId: auth.currentUser!.uid,
+    //   receiverId: receiverId,
+    //   text: text,
+    //   type: messageType,
+    //   timeSent: timeSent,
+    //   messageId: messageId,
+    //   isSeen: false,
+    //   repliedMessage: messageReply == null ? '' : messageReply.message,
+    //   repliedTo: messageReply == null
+    //       ? ''
+    //       : messageReply.isMe
+    //           ? senderName
+    //           : receiverName ?? '',
+    //   repliedMessageType:
+    //       messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+    // );
     if (isGroupChat) {
       // groups -> groupId -> chat -> message
       await firestore
@@ -261,7 +253,7 @@ class ChatRepository {
           .collection('audios')
           .doc(messageId)
           .set(
-            message.toMap(),
+            audioMetadata.toMap(),
           );
     } else {
       // users -> senderId -> audios -> messageId -> store audio
@@ -271,7 +263,7 @@ class ChatRepository {
           .collection('audios')
           .doc(messageId)
           .set(
-            message.toMap(),
+            audioMetadata.toMap(),
           );
 
       // users -> receiverId -> audios -> messageId -> store audio
@@ -281,7 +273,7 @@ class ChatRepository {
           .collection('audios')
           .doc(messageId)
           .set(
-            message.toMap(),
+            audioMetadata.toMap(),
           );
     }
   }
@@ -337,7 +329,7 @@ class ChatRepository {
     required MessageEnum messageEnum,
     required MessageReply? messageReply,
     required bool isGroupChat,
-    required AudioMetadata metadata,
+    required AudioMetadata audioMetadata,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -357,38 +349,33 @@ class ChatRepository {
       }
 
       _saveChatToSubCollection(
-          sender: sender,
-          receiver: receiver,
-          text: '📙 Audio 🎵',
-          timeSent: timeSent,
-          receiverId: receiverId,
-          isGroupChat: isGroupChat);
+        sender: sender,
+        receiver: receiver,
+        text: '📙 Audio 🎵',
+        timeSent: timeSent,
+        receiverId: receiverId,
+        isGroupChat: isGroupChat,
+      );
 
       _saveMessageToSubCollection(
-          receiverId: receiverId,
-          text: audioFileUrl,
-          timeSent: timeSent,
-          messageId: messageId,
-          userName: sender.name,
-          messageType: messageEnum,
-          messageReply: messageReply,
-          senderName: sender.name,
-          receiverName: receiver?.name,
-          isGroupChat: isGroupChat,
-          metadata: metadata);
+        receiverId: receiverId,
+        text: audioFileUrl,
+        timeSent: timeSent,
+        messageId: messageId,
+        userName: sender.name,
+        messageType: messageEnum,
+        messageReply: messageReply,
+        senderName: sender.name,
+        receiverName: receiver?.name,
+        isGroupChat: isGroupChat,
+      );
 
       _saveAudioToSubCollection(
-          receiverId: receiverId,
-          text: audioFileUrl,
-          timeSent: timeSent,
-          messageId: messageId,
-          userName: sender.name,
-          messageType: messageEnum,
-          messageReply: messageReply,
-          senderName: sender.name,
-          receiverName: receiver?.name,
-          isGroupChat: isGroupChat,
-          metadata: metadata);
+        receiverId: receiverId,
+        messageId: messageId,
+        isGroupChat: isGroupChat,
+        audioMetadata: audioMetadata,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -473,73 +460,35 @@ class ChatRepository {
     required String messageId,
   }) async {
     try {
-      final messageData = await firestore
+      // TODO: Test
+      final audioData = await firestore
           .collection('users')
           .doc(auth.currentUser!.uid)
-          .collection('chats')
-          .doc(senderId)
-          .collection('messages')
+          .collection('audios')
           .doc(messageId)
           .get();
-      final message = Message.fromMap(messageData.data()!);
-      final isFavorite = message.metadata!.isFavorite;
-      void updateMessageInFirestore(
-              String uid1, String uid2, bool isFavorite) async =>
+      final audio = AudioMetadata.fromMap(audioData.data()!);
+      final isFavorite = audio.isFavorite;
+      void updateAudioInFirestore(String userId, bool isFavorite) async =>
           await firestore
               .collection('users')
-              .doc(uid1)
-              .collection('chats')
-              .doc(uid2)
-              .collection('messages')
+              .doc(userId)
+              .collection('audios')
               .doc(messageId)
-              .update({
-            'metadata': {'isFavorite': isFavorite}
-          });
+              .update({'isFavorite': isFavorite});
 
       if (isFavorite) {
-        // Update in the message for the receiver (current user)
-        updateMessageInFirestore(auth.currentUser!.uid, senderId, false);
-        // await firestore
-        //     .collection('users')
-        //     .doc(auth.currentUser!.uid)
-        //     .collection('chats')
-        //     .doc(senderId)
-        //     .collection('messages')
-        //     .doc(messageId)
-        //     .update({'metadata' : {'isFavorite' : false}});
+        // Update in the audio for the receiver (current user)
+        updateAudioInFirestore(auth.currentUser!.uid, false);
 
-        // Update in the message for the sender
-        updateMessageInFirestore(senderId, auth.currentUser!.uid, false);
-        // await firestore
-        //     .collection('users')
-        //     .doc(senderId)
-        //     .collection('chats')
-        //     .doc(auth.currentUser!.uid)
-        //     .collection('messages')
-        //     .doc(messageId)
-        //     .update({'metadata' : {'isFavorite' : false}});
+        // Update in the audio for the sender
+        updateAudioInFirestore(senderId, false);
       } else {
-        // Update in the message for the receiver (current user)
-        updateMessageInFirestore(auth.currentUser!.uid, senderId, true);
-        // await firestore
-        //     .collection('users')
-        //     .doc(auth.currentUser!.uid)
-        //     .collection('chats')
-        //     .doc(senderId)
-        //     .collection('messages')
-        //     .doc(messageId)
-        //     .update({'metadata' : {'isFavorite' : true}});
+        // Update in the audio for the receiver (current user)
+        updateAudioInFirestore(auth.currentUser!.uid, true);
 
-        // Update in the message for the sender
-        updateMessageInFirestore(senderId, auth.currentUser!.uid, false);
-        // await firestore
-        //     .collection('users')
-        //     .doc(senderId)
-        //     .collection('chats')
-        //     .doc(auth.currentUser!.uid)
-        //     .collection('messages')
-        //     .doc(messageId)
-        //     .update({'metadata' : {'isFavorite' : true}});
+        // Update in the audio for the sender
+        updateAudioInFirestore(senderId, false);
       }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());

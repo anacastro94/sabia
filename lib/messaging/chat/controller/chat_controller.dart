@@ -79,7 +79,7 @@ class ChatController {
               messageEnum: messageEnum,
               messageReply: messageReply,
               isGroupChat: isGroupChat,
-              metadata: metadata,
+              audioMetadata: metadata,
             ));
     ref.read(messageReplyProvider.state).update((state) => null);
   }

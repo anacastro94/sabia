@@ -5,6 +5,9 @@ class AudioMetadata {
   final String artUrl;
   final String url;
   final bool isFavorite;
+  final bool isSeen;
+  final String senderId;
+  final DateTime timeSent;
 
   AudioMetadata({
     required this.id,
@@ -13,6 +16,9 @@ class AudioMetadata {
     required this.artUrl,
     required this.url,
     this.isFavorite = false,
+    this.isSeen = false,
+    required this.senderId,
+    required this.timeSent,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +29,9 @@ class AudioMetadata {
       'artUrl': artUrl,
       'url': url,
       'isFavorite': isFavorite,
+      'isSeen': isSeen,
+      'senderId': senderId,
+      'timeSent': timeSent.millisecondsSinceEpoch,
     };
   }
 
@@ -34,6 +43,9 @@ class AudioMetadata {
       artUrl: map['artUrl'] ?? '',
       url: map['url'] ?? '',
       isFavorite: map['isFavorite'] ?? false,
+      isSeen: map['isSeen'] ?? false,
+      senderId: map['senderId'] ?? '',
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
     );
   }
 }

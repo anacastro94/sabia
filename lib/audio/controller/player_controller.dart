@@ -21,8 +21,18 @@ class AudioPlayerController {
   final playButtonNotifier = PlayButtonNotifier();
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
-  final currentAudioMetadataNotifier = ValueNotifier<AudioMetadata>(
-      AudioMetadata(author: '', title: '', artUrl: kLogoUrl, id: '', url: ''));
+  final currentAudioMetadataNotifier =
+      ValueNotifier<AudioMetadata>(AudioMetadata(
+    author: '',
+    title: '',
+    artUrl: kLogoUrl,
+    id: '',
+    url: '',
+    isFavorite: false,
+    isSeen: false,
+    senderId: '',
+    timeSent: DateTime.now(),
+  ));
   final playListNotifier = ValueNotifier<List<AudioMetadata>>([]);
   final isFirstAudioNotifier = ValueNotifier<bool>(true);
   final isLastAudioNotifier = ValueNotifier<bool>(true);
@@ -49,13 +59,16 @@ class AudioPlayerController {
     final playlist = await playlistRepository.fetchInitialPlaylist();
     final mediaItems = playlist
         .map((audio) => MediaItem(
-              id: audio['id'] ?? ' ',
-              title: audio['title'] ?? ' ',
-              artist: audio['author'] ?? ' ',
-              artUri: Uri.parse(audio['artUrl'] ?? kLogoUrl),
+              id: audio.id,
+              title: audio.title,
+              artist: audio.author,
+              artUri: Uri.parse(audio.artUrl),
               extras: {
-                'url': audio['url'],
-                'isFavorite': audio['isFavorite'],
+                'url': audio.url,
+                'isFavorite': audio.isFavorite,
+                'isSeen': audio.isSeen,
+                'senderId': audio.senderId,
+                'timeSent': audio.timeSent.millisecondsSinceEpoch,
               },
             ))
         .toList();
@@ -72,16 +85,21 @@ class AudioPlayerController {
           artUrl: kLogoUrl,
           id: '',
           url: '',
+          senderId: '',
+          timeSent: DateTime.now(),
         );
       } else {
         final newList = playlist
-            .map((item) => AudioMetadata(
-                  author: item.artist ?? '',
-                  title: item.title ?? '',
-                  artUrl: item.artUri?.path ?? '',
-                  id: item.id,
-                  url: item.extras?['url'] ?? '',
-                  isFavorite: item.extras?['isFavorite'],
+            .map((mediaItem) => AudioMetadata(
+                  author: mediaItem.artist ?? '',
+                  title: mediaItem.title ?? '',
+                  artUrl: mediaItem.artUri?.path ?? '',
+                  id: mediaItem.id,
+                  url: mediaItem.extras?['url'] ?? '',
+                  isFavorite: mediaItem.extras?['isFavorite'],
+                  senderId: mediaItem.extras?['senderId'] ?? '',
+                  timeSent: DateTime.fromMillisecondsSinceEpoch(
+                      mediaItem.extras!['timeSent']),
                 ))
             .toList();
         playListNotifier.value = newList;
@@ -159,9 +177,13 @@ class AudioPlayerController {
         id: mediaItem?.id ?? '',
         author: mediaItem?.artist ?? '',
         title: mediaItem?.title ?? '',
-        artUrl: mediaItem?.artUri?.toString() ?? '',
+        artUrl: mediaItem?.artUri?.toString() ?? kLogoUrl,
         url: mediaItem?.extras!['url'] ?? '',
-        isFavorite: mediaItem?.extras?['isFavorite'],
+        isFavorite: mediaItem?.extras?['isFavorite'] ?? false,
+        isSeen: mediaItem?.extras?['isSeen'] ?? false,
+        senderId: mediaItem?.extras?['senderId'] ?? '',
+        timeSent: DateTime.fromMillisecondsSinceEpoch(
+            mediaItem?.extras?['timeSent'] ?? 0),
       );
       _updateSkipButtons();
     });
@@ -219,13 +241,16 @@ class AudioPlayerController {
     final audio = await playlistRepository
         .fetchAnotherAudio(); //TODO: Add an specific audio to playlist
     final mediaItem = MediaItem(
-      id: audio['id'] ?? ' ',
-      title: audio['title'] ?? ' ',
-      artist: audio['author'] ?? ' ',
-      artUri: Uri.parse(audio['artUrl'] ?? kLogoUrl),
+      id: audio.id,
+      title: audio.title,
+      artist: audio.author,
+      artUri: Uri.parse(audio.artUrl),
       extras: {
-        'url': audio['url'],
-        'isFavorite': audio['isFavorite'],
+        'url': audio.url,
+        'isFavorite': audio.isFavorite,
+        'isSeen': audio.isSeen,
+        'senderId': audio.senderId,
+        'timeSent': audio.timeSent.millisecondsSinceEpoch,
       },
     );
     _audioHandler.addQueueItem(mediaItem);
