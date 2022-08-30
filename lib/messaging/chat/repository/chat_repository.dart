@@ -104,7 +104,7 @@ class ChatRepository {
     });
   }
 
-  void _saveDataToContactsSubCollection({
+  void _saveChatToSubCollection({
     required UserModel sender,
     required UserModel? receiver,
     required String text,
@@ -154,7 +154,7 @@ class ChatRepository {
     }
   }
 
-  void _saveMessageToContactsSubCollection({
+  void _saveMessageToSubCollection({
     required String receiverId,
     required String text,
     required DateTime timeSent,
@@ -222,6 +222,70 @@ class ChatRepository {
     }
   }
 
+  void _saveAudioToSubCollection({
+    required String receiverId,
+    required String text,
+    required DateTime timeSent,
+    required String messageId,
+    required String userName,
+    required MessageEnum messageType,
+    required MessageReply? messageReply,
+    required String senderName,
+    required String? receiverName,
+    required bool isGroupChat,
+    AudioMetadata? metadata,
+  }) async {
+    final message = Message(
+      senderId: auth.currentUser!.uid,
+      receiverId: receiverId,
+      text: text,
+      type: messageType,
+      timeSent: timeSent,
+      messageId: messageId,
+      isSeen: false,
+      repliedMessage: messageReply == null ? '' : messageReply.message,
+      repliedTo: messageReply == null
+          ? ''
+          : messageReply.isMe
+              ? senderName
+              : receiverName ?? '',
+      repliedMessageType:
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+      metadata: metadata,
+    );
+    if (isGroupChat) {
+      // groups -> groupId -> chat -> message
+      await firestore
+          .collection('groups')
+          .doc(receiverId)
+          .collection('audios')
+          .doc(messageId)
+          .set(
+            message.toMap(),
+          );
+    } else {
+      // users -> senderId -> audios -> messageId -> store audio
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('audios')
+          .doc(messageId)
+          .set(
+            message.toMap(),
+          );
+
+      // users -> receiverId -> audios -> messageId -> store audio
+      await firestore
+          .collection('users')
+          .doc(receiverId)
+          .collection('audios')
+          .doc(messageId)
+          .set(
+            message.toMap(),
+          );
+    }
+  }
+
   void sendTextMessage({
     required BuildContext context,
     required String text,
@@ -240,7 +304,7 @@ class ChatRepository {
         receiver = UserModel.fromMap(userDataMap.data()!);
       }
       var messageId = const Uuid().v1();
-      _saveDataToContactsSubCollection(
+      _saveChatToSubCollection(
           sender: sender,
           receiver: receiver,
           text: text,
@@ -248,7 +312,7 @@ class ChatRepository {
           receiverId: receiverId,
           isGroupChat: isGroupChat);
 
-      _saveMessageToContactsSubCollection(
+      _saveMessageToSubCollection(
           receiverId: receiverId,
           text: text,
           timeSent: timeSent,
@@ -292,7 +356,7 @@ class ChatRepository {
         receiver = UserModel.fromMap(userDataMap.data()!);
       }
 
-      _saveDataToContactsSubCollection(
+      _saveChatToSubCollection(
           sender: sender,
           receiver: receiver,
           text: '📙 Audio 🎵',
@@ -300,7 +364,7 @@ class ChatRepository {
           receiverId: receiverId,
           isGroupChat: isGroupChat);
 
-      _saveMessageToContactsSubCollection(
+      _saveMessageToSubCollection(
           receiverId: receiverId,
           text: audioFileUrl,
           timeSent: timeSent,
@@ -310,7 +374,21 @@ class ChatRepository {
           messageReply: messageReply,
           senderName: sender.name,
           receiverName: receiver?.name,
-          isGroupChat: isGroupChat);
+          isGroupChat: isGroupChat,
+          metadata: metadata);
+
+      _saveAudioToSubCollection(
+          receiverId: receiverId,
+          text: audioFileUrl,
+          timeSent: timeSent,
+          messageId: messageId,
+          userName: sender.name,
+          messageType: messageEnum,
+          messageReply: messageReply,
+          senderName: sender.name,
+          receiverName: receiver?.name,
+          isGroupChat: isGroupChat,
+          metadata: metadata);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -334,7 +412,7 @@ class ChatRepository {
       }
       var messageId = const Uuid().v1();
 
-      _saveDataToContactsSubCollection(
+      _saveChatToSubCollection(
           sender: sender,
           receiver: receiver,
           text: 'GIF',
@@ -342,7 +420,7 @@ class ChatRepository {
           receiverId: receiverId,
           isGroupChat: isGroupChat);
 
-      _saveMessageToContactsSubCollection(
+      _saveMessageToSubCollection(
           receiverId: receiverId,
           text: gifUrl,
           timeSent: timeSent,

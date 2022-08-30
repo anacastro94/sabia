@@ -1,14 +1,95 @@
 import 'package:bbk_final_ana/common/constants/constants.dart';
-import 'package:bbk_final_ana/messaging/chat/repository/chat_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final playListRepositoryProvider =
-    Provider<PlaylistRepository>((ref) => FirebasePlaylistRepository());
+import '../../models/message.dart';
+
+final playListRepositoryProvider = Provider<PlaylistRepository>((ref) {
+  return AudioRepository(
+    auth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+  );
+});
+
+//TODO: DEL
+final playListRepositoryProvider2 = Provider<AudioRepository>((ref) {
+  return AudioRepository(
+    auth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+  );
+});
 
 abstract class PlaylistRepository {
   Future<List<Map<String, dynamic>>> fetchInitialPlaylist();
   Future<Map<String, dynamic>> fetchAnotherAudio();
+}
+
+class AudioRepository extends PlaylistRepository {
+  AudioRepository({
+    required this.auth,
+    required this.firestore,
+  });
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
+
+  Stream<List<Message>> getAudioMessagesStream() {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('audios')
+        .snapshots()
+        .map((event) {
+      List<Message> messages = [];
+      for (var document in event.docs) {
+        var message = Message.fromMap(document.data());
+        messages.add(message);
+      }
+      return messages;
+    });
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> fetchInitialPlaylist(
+      {int length = 1}) async {
+    List<Map<String, dynamic>> playlist = await getAudioMessagesStream()
+        .take(length)
+        .map((messages) => messages.map((message) {
+              final audioMetadata = message.metadata;
+              return {
+                'id': audioMetadata!.id,
+                'author': audioMetadata.author,
+                'title': audioMetadata.title,
+                'artUrl': audioMetadata.artUrl,
+                'url': audioMetadata.url,
+                'isFavorite': audioMetadata.isFavorite,
+              };
+            }).toList())
+        .first;
+    return playlist;
+  }
+
+  // TODO: Update from here below
+  @override
+  Future<Map<String, dynamic>> fetchAnotherAudio() async {
+    return _nextAudio();
+  }
+
+  int _audioIndex = 0;
+  static const _maxAudioNumber = 11;
+  Map<String, dynamic> _nextAudio() {
+    // TODO: Get from database
+    _audioIndex = (_audioIndex % _maxAudioNumber) + 1;
+    return {
+      'id': _audioIndex.toString().padLeft(3, '0'),
+      'title': 'Song $_audioIndex',
+      'author': 'SoundHelix',
+      'artUrl': kArtworkUrls[_audioIndex],
+      'url':
+          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-$_audioIndex.mp3',
+      'isFavorite': false,
+    };
+  }
 }
 
 class FirebasePlaylistRepository extends PlaylistRepository {
@@ -44,26 +125,5 @@ class FirebasePlaylistRepository extends PlaylistRepository {
           'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-$_audioIndex.mp3',
       'isFavorite': false,
     };
-  }
-}
-
-class AudioRepository extends PlaylistRepository {
-  AudioRepository({
-    required this.chatRepository,
-    required this.auth,
-  });
-  final ChatRepository chatRepository;
-  final FirebaseAuth auth;
-
-  @override
-  Future<List<Map<String, dynamic>>> fetchInitialPlaylist() {
-    // TODO: implement fetchInitialPlaylist
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, dynamic>> fetchAnotherAudio() {
-    // TODO: implement fetchAnotherAudio
-    throw UnimplementedError();
   }
 }

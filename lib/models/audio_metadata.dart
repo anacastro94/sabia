@@ -33,7 +33,7 @@ class AudioMetadata {
       title: map['title'] ?? '',
       artUrl: map['artUrl'] ?? '',
       url: map['url'] ?? '',
-      isFavorite: map['isFavorite'],
+      isFavorite: map['isFavorite'] ?? false,
     );
   }
 }

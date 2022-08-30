@@ -57,7 +57,9 @@ class Message {
       repliedMessage: map['repliedMessage'] ?? '',
       repliedTo: map['repliedTo'] ?? '',
       repliedMessageType: (map['repliedMessageType'] as String).toEnum(),
-      metadata: map['metadata'],
+      metadata: map['metadata'] != null
+          ? AudioMetadata.fromMap(map['metadata'])
+          : null,
     );
   }
 }

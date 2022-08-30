@@ -2,6 +2,7 @@ import 'package:bbk_final_ana/audio/controller/audio_handler.dart';
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/common/screens/error_screen.dart';
+import 'package:bbk_final_ana/common/screens/stream_test_screen.dart';
 import 'package:bbk_final_ana/router.dart';
 import 'package:bbk_final_ana/landing/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';

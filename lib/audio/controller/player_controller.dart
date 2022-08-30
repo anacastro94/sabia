@@ -6,7 +6,6 @@ import 'package:bbk_final_ana/audio/notifiers/repeat_button_notifier.dart';
 import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
 
 import '../../common/constants/constants.dart';
 import '../enums/play_button_enum.dart';
@@ -30,7 +29,6 @@ class AudioPlayerController {
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
   final playerSpeedNotifier = ValueNotifier<double>(1.0);
   late AudioHandler _audioHandler;
-  late ConcatenatingAudioSource _playlist;
 
   AudioPlayerController({required this.ref}) {
     _init();
@@ -48,8 +46,8 @@ class AudioPlayerController {
 
   Future<void> _loadPlaylist() async {
     final playlistRepository = ref.read(playListRepositoryProvider);
-    final playList = await playlistRepository.fetchInitialPlaylist();
-    final mediaItems = playList
+    final playlist = await playlistRepository.fetchInitialPlaylist();
+    final mediaItems = playlist
         .map((audio) => MediaItem(
               id: audio['id'] ?? ' ',
               title: audio['title'] ?? ' ',
@@ -64,7 +62,6 @@ class AudioPlayerController {
     _audioHandler.addQueueItems(mediaItems);
   }
 
-  ///NEW
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) {
@@ -93,7 +90,6 @@ class AudioPlayerController {
     });
   }
 
-  ///NEW
   void _listenToPlaybackState() {
     _audioHandler.playbackState.listen((playbackState) {
       final isPlaying = playbackState.playing;
@@ -112,7 +108,6 @@ class AudioPlayerController {
     });
   }
 
-  ///NEW
   void _listenToCurrentPosition() {
     AudioService.position.listen((position) {
       final oldState = progressNotifier.value;
@@ -124,7 +119,6 @@ class AudioPlayerController {
     });
   }
 
-  ///NEW
   void _listenToBufferedPosition() {
     _audioHandler.playbackState.listen((playbackState) {
       final oldState = progressNotifier.value;
@@ -136,7 +130,6 @@ class AudioPlayerController {
     });
   }
 
-  ///NEW
   void _listenToTotalDuration() {
     _audioHandler.mediaItem.listen((mediaItem) {
       final oldState = progressNotifier.value;
@@ -148,7 +141,6 @@ class AudioPlayerController {
     });
   }
 
-  ///NEW
   void _updateSkipButtons() {
     final mediaItem = _audioHandler.mediaItem.value;
     final playlist = _audioHandler.queue.value;
@@ -161,7 +153,6 @@ class AudioPlayerController {
     }
   }
 
-  ///NEW
   void _listenToChangesInAudio() {
     _audioHandler.mediaItem.listen((mediaItem) {
       currentAudioMetadataNotifier.value = AudioMetadata(
