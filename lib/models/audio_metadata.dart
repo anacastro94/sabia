@@ -48,4 +48,28 @@ class AudioMetadata {
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
     );
   }
+
+  AudioMetadata copyWith({
+    String? id,
+    String? author,
+    String? title,
+    String? artUrl,
+    String? url,
+    bool? isFavorite,
+    bool? isSeen,
+    String? senderId,
+    DateTime? timeSent,
+  }) {
+    return AudioMetadata(
+      id: id ?? this.id,
+      author: author ?? this.author,
+      title: title ?? this.title,
+      artUrl: artUrl ?? this.artUrl,
+      url: url ?? this.url,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isSeen: isSeen ?? this.isSeen,
+      senderId: senderId ?? this.senderId,
+      timeSent: timeSent ?? this.timeSent,
+    );
+  }
 }

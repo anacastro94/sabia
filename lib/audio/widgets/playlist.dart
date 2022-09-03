@@ -42,13 +42,13 @@ class ListViewPlaylist extends ConsumerWidget {
                   onTap: () => playerController.skipToQueueItem(index),
                   title: Text(playlist[index].title),
                   subtitle: Text(playlist[index].author),
-                  trailing: IconButton(
-                      onPressed: () =>
-                          playerController.removeAudioFromPlaylist(index),
-                      icon: const Icon(
-                        Icons.remove_circle,
-                        color: Colors.red,
-                      )),
+                  // trailing: IconButton(
+                  //     onPressed: () =>
+                  //         playerController.removeAudioFromPlaylist(index),
+                  //     icon: const Icon(
+                  //       Icons.remove_circle,
+                  //       color: Colors.red,
+                  //     )),
                 );
               }),
         );

@@ -450,48 +450,4 @@ class ChatRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
-
-  /// Function to toggle the isFavorite of the audio message.
-  /// Only the current user as receiver of the message can toggle.
-  /// Still, the message will be update for the sender and receiver.
-  void toggleAudioMessageFavorite({
-    required BuildContext context,
-    required String senderId,
-    required String messageId,
-  }) async {
-    try {
-      // TODO: Test
-      final audioData = await firestore
-          .collection('users')
-          .doc(auth.currentUser!.uid)
-          .collection('audios')
-          .doc(messageId)
-          .get();
-      final audio = AudioMetadata.fromMap(audioData.data()!);
-      final isFavorite = audio.isFavorite;
-      void updateAudioInFirestore(String userId, bool isFavorite) async =>
-          await firestore
-              .collection('users')
-              .doc(userId)
-              .collection('audios')
-              .doc(messageId)
-              .update({'isFavorite': isFavorite});
-
-      if (isFavorite) {
-        // Update in the audio for the receiver (current user)
-        updateAudioInFirestore(auth.currentUser!.uid, false);
-
-        // Update in the audio for the sender
-        updateAudioInFirestore(senderId, false);
-      } else {
-        // Update in the audio for the receiver (current user)
-        updateAudioInFirestore(auth.currentUser!.uid, true);
-
-        // Update in the audio for the sender
-        updateAudioInFirestore(senderId, false);
-      }
-    } catch (e) {
-      showSnackBar(context: context, content: e.toString());
-    }
-  }
 }

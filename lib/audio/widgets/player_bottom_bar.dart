@@ -30,11 +30,6 @@ class PlayerBottomBar extends ConsumerWidget {
           );
           break;
         case (1):
-          break;
-        case (2):
-          playerController.addAudioToPlaylist();
-          break;
-        case (3):
           showModalBottomSheet(
             backgroundColor: Colors.white.withOpacity(0.9),
             shape: const RoundedRectangleBorder(
@@ -71,14 +66,6 @@ class PlayerBottomBar extends ConsumerWidget {
               },
             ),
             label: '    x'),
-        const BottomNavigationBarItem(
-          icon: FavoriteIcon(),
-          label: 'Favorite',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: 'Add',
-        ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.featured_play_list_outlined),
           label: 'Playlist',

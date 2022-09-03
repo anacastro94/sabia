@@ -13,11 +13,15 @@ import '../notifiers/player_progress_state.dart';
 import '../repository/playlist_repository.dart';
 import 'audio_handler.dart';
 
-final audioPlayerControllerProvider =
-    Provider((ref) => AudioPlayerController(ref: ref));
+final audioPlayerControllerProvider = Provider((ref) {
+  final playlistRepository = ref.watch(playListRepositoryProvider);
+  return AudioPlayerController(
+      ref: ref, playlistRepository: playlistRepository);
+});
 
 class AudioPlayerController {
   final ProviderRef ref;
+  final PlaylistRepository playlistRepository;
   final playButtonNotifier = PlayButtonNotifier();
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
@@ -40,9 +44,10 @@ class AudioPlayerController {
   final playerSpeedNotifier = ValueNotifier<double>(1.0);
   late AudioHandler _audioHandler;
 
-  AudioPlayerController({required this.ref}) {
+  AudioPlayerController({required this.ref, required this.playlistRepository}) {
     _init();
   }
+
   void _init() async {
     _audioHandler = ref.read(audioHandlerProvider);
     await _loadPlaylist();
@@ -55,7 +60,6 @@ class AudioPlayerController {
   }
 
   Future<void> _loadPlaylist() async {
-    final playlistRepository = ref.read(playListRepositoryProvider);
     final playlist = await playlistRepository.fetchInitialPlaylist();
     final mediaItems = playlist
         .map((audio) => MediaItem(
@@ -89,19 +93,19 @@ class AudioPlayerController {
           timeSent: DateTime.now(),
         );
       } else {
-        final newList = playlist
-            .map((mediaItem) => AudioMetadata(
-                  author: mediaItem.artist ?? '',
-                  title: mediaItem.title ?? '',
-                  artUrl: mediaItem.artUri?.path ?? '',
-                  id: mediaItem.id,
-                  url: mediaItem.extras?['url'] ?? '',
-                  isFavorite: mediaItem.extras?['isFavorite'],
-                  senderId: mediaItem.extras?['senderId'] ?? '',
-                  timeSent: DateTime.fromMillisecondsSinceEpoch(
-                      mediaItem.extras!['timeSent']),
-                ))
-            .toList();
+        final newList = playlist.map((mediaItem) {
+          return AudioMetadata(
+            author: mediaItem.artist ?? '',
+            title: mediaItem.title ?? '',
+            artUrl: mediaItem.artUri?.path ?? '',
+            id: mediaItem.id,
+            url: mediaItem.extras?['url'] ?? '',
+            isFavorite: mediaItem.extras?['isFavorite'],
+            senderId: mediaItem.extras?['senderId'] ?? '',
+            timeSent: DateTime.fromMillisecondsSinceEpoch(
+                mediaItem.extras!['timeSent']),
+          );
+        }).toList();
         playListNotifier.value = newList;
       }
       _updateSkipButtons();
@@ -269,5 +273,45 @@ class AudioPlayerController {
   void setPlayerSpeed(double speed) async {
     await _audioHandler.setSpeed(speed);
     playerSpeedNotifier.value = speed;
+  }
+
+  void toggleAudioMessageFavorite(
+    BuildContext context,
+    String senderId,
+    String messageId,
+  ) {
+    // Update database
+    playlistRepository.toggleAudioMessageFavorite(
+        context: context, senderId: senderId, messageId: messageId);
+    final currentAudioMetadata = currentAudioMetadataNotifier.value;
+    final isFavorite = currentAudioMetadata.isFavorite;
+    // Update state
+    currentAudioMetadataNotifier.value =
+        currentAudioMetadata.copyWith(isFavorite: !isFavorite);
+  }
+
+  void setAudioMessageSeen({
+    required BuildContext context,
+    required String senderId,
+    required String messageId,
+  }) {
+    playlistRepository.setAudioMessageSeen(
+        context: context, senderId: senderId, messageId: messageId);
+  }
+
+  Stream<List<AudioMetadata>> getAudioMessagesStream() {
+    return playlistRepository.getAudioMessagesStream();
+  }
+
+  void playSelectedAudio(AudioMetadata audio) async {
+    final index = _getItemIndex(audio.id);
+    _audioHandler.skipToQueueItem(index);
+  }
+
+  int _getItemIndex(String id) {
+    final playlist = _audioHandler.queue.value;
+    final mediaItem = playlist.where((element) => element.id == id).first;
+    playlist.indexOf(mediaItem);
+    return playlist.indexOf(mediaItem);
   }
 }

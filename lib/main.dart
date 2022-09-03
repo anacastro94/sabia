@@ -1,15 +1,14 @@
 import 'package:bbk_final_ana/audio/controller/audio_handler.dart';
+import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/common/screens/error_screen.dart';
-import 'package:bbk_final_ana/common/screens/stream_test_screen.dart';
 import 'package:bbk_final_ana/router.dart';
 import 'package:bbk_final_ana/landing/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'audio/screens/player_screen.dart';
 import 'common/screens/loader_screen.dart';
 
 void main() async {
@@ -43,7 +42,7 @@ class MyApp extends ConsumerWidget {
             if (user == null) {
               return const WelcomeScreen();
             }
-            return const PlayerScreen(); //TODO: Change for InitialDecisionScreen()
+            return const LibraryScreen(); //TODO: Change for InitialDecisionScreen()
           },
           error: (e, trace) {
             return ErrorScreen(error: e.toString());

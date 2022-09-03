@@ -9,7 +9,7 @@ class StreamTestScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playlistRepository = ref.read(playListRepositoryProvider2);
+    final playlistRepository = ref.read(playListRepositoryProvider);
     return ScreenBasicStructure(
       child: StreamBuilder<List<AudioMetadata>>(
           stream: playlistRepository.getAudioMessagesStream(),

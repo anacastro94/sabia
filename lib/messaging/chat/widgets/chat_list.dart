@@ -73,7 +73,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const LoaderScreen();
                 }
-
+                // To scroll down to the most recent message when it is received
                 SchedulerBinding.instance.addPostFrameCallback((_) {
                   messageScrollController
                       .jumpTo(messageScrollController.position.maxScrollExtent);

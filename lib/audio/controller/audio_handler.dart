@@ -75,6 +75,18 @@ class StandardAudioHandler extends BaseAudioHandler {
     queue.add(newQueue);
   }
 
+  @override
+  Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
+    //TODO: Test
+    //  Manage just_audio
+    final audioSource = _createAudioSource(mediaItem);
+    _playList.insert(index, audioSource);
+
+    // Notify system
+    final newQueue = queue.value..insert(index, mediaItem);
+    queue.add(newQueue);
+  }
+
   UriAudioSource _createAudioSource(MediaItem mediaItem) {
     final uri = Uri.parse(mediaItem.extras!['url']);
     return AudioSource.uri(uri, tag: mediaItem);
@@ -119,6 +131,31 @@ class StandardAudioHandler extends BaseAudioHandler {
     if (name == 'dispose') {
       await _player.dispose();
       super.stop();
+    }
+    if (name == 'toggleIsFavorite') {
+      /// The code below is not working well.
+      var index = _player.currentIndex;
+      final newQueue = queue.value;
+      if (index == null || newQueue.isEmpty) return;
+      if (_player.shuffleModeEnabled) {
+        index = _player.shuffleIndices![index];
+      }
+      final oldMediaItem = newQueue[index];
+      final bool isFavorite = oldMediaItem.extras?['isFavorite'];
+      final newMediaItem = oldMediaItem.copyWith(extras: {
+        'url': oldMediaItem.extras?['url'],
+        'isFavorite': !isFavorite,
+        'isSeen': oldMediaItem.extras?['isSeen'],
+        'senderId': oldMediaItem.extras?['senderId'],
+        'timeSent': oldMediaItem.extras?['timeSent'],
+      });
+      newQueue[index] = newMediaItem;
+      print(newQueue[0].title);
+      queue.add(newQueue);
+      mediaItem.add(newMediaItem);
+      // await _playList.clear();
+      // await addQueueItems(newQueue);
+
     }
   }
 
