@@ -34,12 +34,17 @@ class RecorderController {
   final progressNotifier = RecorderProgressNotifier();
   final currentAudioMetadataNotifier = CurrentAudioMetadataNotifier();
   FlutterSoundRecorder? _recorder;
+  FlutterSoundPlayer? _player;
 
   void initRecorder(BuildContext context) async {
     _recorder = FlutterSoundRecorder();
+    _player = FlutterSoundPlayer();
     try {
       await _openRecorder();
+      await _openPlayer();
+      recordButtonNotifier.value = RecorderStateEnum.stopped;
       _listenToRecorderProgress();
+      _listenToPlayerProgress();
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -71,7 +76,11 @@ class RecorderController {
       androidWillPauseWhenDucked: true,
     ));
     await _recorder!.setSubscriptionDuration(const Duration(milliseconds: 10));
-    recordButtonNotifier.value = RecorderStateEnum.stopped;
+  }
+
+  Future<void> _openPlayer() async {
+    await _player!.openPlayer();
+    await _player!.setSubscriptionDuration(const Duration(milliseconds: 10));
   }
 
   void _listenToRecorderProgress() {
@@ -81,9 +90,18 @@ class RecorderController {
     });
   }
 
+  void _listenToPlayerProgress() {
+    _player!.onProgress!.listen((record) {
+      progressNotifier.value =
+          RecorderProgressState(maxDuration: record.position);
+    });
+  }
+
   void disposeRecorder() {
     _recorder!.closeRecorder();
     _recorder = null;
+    _player!.closePlayer();
+    _player = null;
     recordButtonNotifier.value = RecorderStateEnum.notInitialized;
   }
 
@@ -128,15 +146,24 @@ class RecorderController {
 
   void restart() {
     _recorder!.updateRecorderProgress(duration: 0);
+    _player!.updateProgress(duration: 0);
     recordButtonNotifier.value = RecorderStateEnum.stopped;
   }
 
-  void playRecord() {
+  void playRecord() async {
+    if (recordButtonNotifier.value != RecorderStateEnum.recorded) return;
     recordButtonNotifier.value = RecorderStateEnum.playingPlayback;
+    await _player!.startPlayer(
+        fromURI: currentAudioMetadataNotifier.value.url,
+        whenFinished: () {
+          recordButtonNotifier.value = RecorderStateEnum.recorded;
+        });
   }
 
-  void pausePlayback() {
+  void pausePlayback() async {
+    if (recordButtonNotifier.value != RecorderStateEnum.playingPlayback) return;
     recordButtonNotifier.value = RecorderStateEnum.recorded;
+    await _player!.pausePlayer();
   }
 
   void sendRecording({

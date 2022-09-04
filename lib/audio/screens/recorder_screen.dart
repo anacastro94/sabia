@@ -65,8 +65,10 @@ class _PlayerScreenState extends ConsumerState<RecorderScreen> {
                 ),
                 color: kGreenLight.withOpacity(0.8),
               ),
-              alignment: Alignment.bottomCenter,
-              //child: const AddRemoveToPlaylist(),
+              alignment: Alignment.bottomRight,
+              child: SizedBox(
+                  height: 240.0,
+                  child: Image.asset('assets/images/bottom_decoration3.png')),
             ),
           ),
           Positioned(
