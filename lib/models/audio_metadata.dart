@@ -9,7 +9,7 @@ class AudioMetadata {
   final String senderId;
   final DateTime timeSent;
 
-  AudioMetadata({
+  const AudioMetadata({
     required this.id,
     required this.author,
     required this.title,

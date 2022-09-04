@@ -11,24 +11,24 @@ class PlayButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playerController = ref.read(audioPlayerControllerProvider);
-    return ValueListenableBuilder<PlayerButtonState>(
+    return ValueListenableBuilder<PlayerStateEnum>(
         valueListenable: playerController.playButtonNotifier,
         builder: (context, value, _) {
           switch (value) {
-            case PlayerButtonState.loading:
+            case PlayerStateEnum.loading:
               return Container(
                 margin: const EdgeInsets.all(8.0),
                 width: 32.0,
                 height: 32.0,
                 child: const StandardCircularProgressIndicator(),
               );
-            case PlayerButtonState.paused:
+            case PlayerStateEnum.paused:
               return IconButton(
                 icon: const Icon(Icons.play_arrow),
                 iconSize: 32.0,
                 onPressed: playerController.play,
               );
-            case PlayerButtonState.playing:
+            case PlayerStateEnum.playing:
               return IconButton(
                 icon: const Icon(Icons.pause),
                 iconSize: 32.0,

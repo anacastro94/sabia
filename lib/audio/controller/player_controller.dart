@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:bbk_final_ana/audio/enums/repeat_button_enum.dart';
 import 'package:bbk_final_ana/audio/notifiers/play_button_notifier.dart';
-import 'package:bbk_final_ana/audio/notifiers/progress_notifier.dart';
+import 'package:bbk_final_ana/audio/notifiers/player_progress_notifier.dart';
 import 'package:bbk_final_ana/audio/notifiers/repeat_button_notifier.dart';
 import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/constants/constants.dart';
 import '../enums/play_button_enum.dart';
+import '../notifiers/audio_metadata_notifier.dart';
 import '../notifiers/player_progress_state.dart';
 import '../repository/playlist_repository.dart';
 import 'audio_handler.dart';
@@ -23,20 +24,9 @@ class AudioPlayerController {
   final ProviderRef ref;
   final PlaylistRepository playlistRepository;
   final playButtonNotifier = PlayButtonNotifier();
-  final progressNotifier = ProgressNotifier();
+  final progressNotifier = PlayerProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
-  final currentAudioMetadataNotifier =
-      ValueNotifier<AudioMetadata>(AudioMetadata(
-    author: '',
-    title: '',
-    artUrl: kLogoUrl,
-    id: '',
-    url: '',
-    isFavorite: false,
-    isSeen: false,
-    senderId: '',
-    timeSent: DateTime.now(),
-  ));
+  final currentAudioMetadataNotifier = CurrentAudioMetadataNotifier();
   final playListNotifier = ValueNotifier<List<AudioMetadata>>([]);
   final isFirstAudioNotifier = ValueNotifier<bool>(true);
   final isLastAudioNotifier = ValueNotifier<bool>(true);
@@ -118,11 +108,11 @@ class AudioPlayerController {
       final processingState = playbackState.processingState;
       if (processingState == AudioProcessingState.loading ||
           processingState == AudioProcessingState.buffering) {
-        playButtonNotifier.value = PlayerButtonState.loading;
+        playButtonNotifier.value = PlayerStateEnum.loading;
       } else if (!isPlaying) {
-        playButtonNotifier.value = PlayerButtonState.paused;
+        playButtonNotifier.value = PlayerStateEnum.paused;
       } else if (processingState != AudioProcessingState.completed) {
-        playButtonNotifier.value = PlayerButtonState.playing;
+        playButtonNotifier.value = PlayerStateEnum.playing;
       } else {
         _audioHandler.seek(Duration.zero);
         _audioHandler.pause();

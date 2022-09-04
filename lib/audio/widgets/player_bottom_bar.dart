@@ -1,12 +1,10 @@
 import 'package:bbk_final_ana/audio/widgets/player_speed_list.dart';
 import 'package:bbk_final_ana/audio/widgets/playlist.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
-import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/player_controller.dart';
-import 'favorite_icon.dart';
 
 class PlayerBottomBar extends ConsumerWidget {
   const PlayerBottomBar({Key? key}) : super(key: key);

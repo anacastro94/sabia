@@ -1,4 +1,4 @@
-enum PlayerButtonState {
+enum PlayerStateEnum {
   paused,
   playing,
   loading,

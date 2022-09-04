@@ -43,17 +43,7 @@ class AudioRecorder extends ChangeNotifier {
       }
     }
     await _recorder!.openRecorder();
-    // I don't understand the following block of code.
-    // I believe it can be removed since the app will be mobile only.
-    if (!await _recorder!.isEncoderSupported(_codec) && kIsWeb) {
-      _codec = Codec.opusWebM;
-      path = 'audio_file.webm';
-      if (!await _recorder!.isEncoderSupported(_codec) && kIsWeb) {
-        _isInitialized = true;
-        return;
-      }
-    }
-    // Setting the audio session
+
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
