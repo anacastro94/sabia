@@ -230,10 +230,10 @@ class AudioPlayerController {
     }
   }
 
+  ///Not working
   void addAudioToPlaylist() async {
     final playlistRepository = ref.read(playListRepositoryProvider);
-    final audio = await playlistRepository
-        .fetchAnotherAudio(); //TODO: Add an specific audio to playlist
+    final audio = await playlistRepository.fetchAnotherAudio();
     final mediaItem = MediaItem(
       id: audio.id,
       title: audio.title,
@@ -250,6 +250,7 @@ class AudioPlayerController {
     _audioHandler.addQueueItem(mediaItem);
   }
 
+  ///Not being used
   void removeAudioFromPlaylist(int index) {
     final lastIndex = _audioHandler.queue.value.length - 1;
     if (lastIndex < 0) return;

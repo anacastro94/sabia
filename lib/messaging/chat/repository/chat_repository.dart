@@ -326,19 +326,18 @@ class ChatRepository {
     required String receiverId,
     required UserModel sender,
     required ProviderRef ref,
-    required MessageEnum messageEnum,
-    required MessageReply? messageReply,
+    MessageReply? messageReply,
     required bool isGroupChat,
     required AudioMetadata audioMetadata,
   }) async {
     try {
       var timeSent = DateTime.now();
-      var messageId = const Uuid().v1();
+      var messageId = audioMetadata.id;
 
       String audioFileUrl = await ref
           .read(commonFirebaseStorageRepositoryProvider)
           .storeFileToFirebase(
-              'chat/${messageEnum.type}/${sender.uid}/$receiverId/$messageId',
+              'chat/${MessageEnum.audio.type}/${sender.uid}/$receiverId/$messageId',
               audioFile);
 
       UserModel? receiver;
@@ -363,7 +362,7 @@ class ChatRepository {
         timeSent: timeSent,
         messageId: messageId,
         userName: sender.name,
-        messageType: messageEnum,
+        messageType: MessageEnum.audio,
         messageReply: messageReply,
         senderName: sender.name,
         receiverName: receiver?.name,
@@ -374,7 +373,10 @@ class ChatRepository {
         receiverId: receiverId,
         messageId: messageId,
         isGroupChat: isGroupChat,
-        audioMetadata: audioMetadata,
+        audioMetadata: audioMetadata.copyWith(
+          url: audioFileUrl,
+          timeSent: timeSent,
+        ),
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());

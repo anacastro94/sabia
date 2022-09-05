@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bbk_final_ana/audio/controller/recorder_controller.dart';
 import 'package:bbk_final_ana/audio/enums/recorder_enum.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/constants/constants.dart';
+import '../../messaging/chat/controller/chat_controller.dart';
 import '../notifiers/recorder_progress_state.dart';
 
 class RecorderScreen extends ConsumerStatefulWidget {
@@ -205,7 +208,7 @@ class RecorderButton extends ConsumerWidget {
         case RecorderStateEnum.recorded:
           return () => recorderController.playRecord();
         case RecorderStateEnum.recording:
-          return () => recorderController.stop();
+          return () => recorderController.stopRecorder();
         case RecorderStateEnum.stopped:
           return () => recorderController.record();
         case RecorderStateEnum.notInitialized:
@@ -262,6 +265,25 @@ class DoneRecordingButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recorderController = ref.read(recorderControllerProvider);
+    final chatController = ref.read(chatControllerProvider);
+
+    void Function()? getButtonFunction(RecorderStateEnum recorderState) {
+      if (recorderState != RecorderStateEnum.recorded) return null;
+      return () {
+        recorderController.sendRecordingData(
+            title: 'My recording', author: 'Ana Castro', artUrl: kLogoUrl);
+        final audioMetadata =
+            recorderController.currentAudioMetadataNotifier.value;
+        final audioFile = File.fromUri(Uri.parse(audioMetadata.url));
+        chatController.sendAudioMessage(
+            context: context,
+            audioFile: audioFile,
+            receiverId: '400HEskT5ARdIvCUGsIriEiaqA22',
+            isGroupChat: false,
+            metadata: audioMetadata);
+      };
+    }
+
     return CircleAvatar(
       radius: 36.0,
       backgroundColor: kBlackOlive.withOpacity(0.2),
@@ -278,7 +300,7 @@ class DoneRecordingButton extends ConsumerWidget {
                 child: FloatingActionButton(
                   backgroundColor: backgroundColor,
                   splashColor: kAntiqueWhite.withOpacity(0.2),
-                  onPressed: () {},
+                  onPressed: getButtonFunction(recorderState),
                   elevation: 0.0,
                   child: Icon(
                     Icons.done,

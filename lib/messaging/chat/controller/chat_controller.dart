@@ -8,7 +8,6 @@ import 'package:bbk_final_ana/models/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/enums/message_enum.dart';
 import '../../../common/providers/message_reply_provider.dart';
 import '../../../models/group.dart';
 
@@ -59,15 +58,13 @@ class ChatController {
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 
-  void sendAudioMessage(
-    BuildContext context,
-    File audioFile,
-    String receiverId,
-    MessageEnum messageEnum,
-    bool isGroupChat,
-    AudioMetadata metadata,
-  ) {
-    final messageReply = ref.read(messageReplyProvider);
+  void sendAudioMessage({
+    required BuildContext context,
+    required File audioFile,
+    required String receiverId,
+    required bool isGroupChat,
+    required AudioMetadata metadata,
+  }) {
     ref
         .read(userDataAuthProvider)
         .whenData((value) => chatRepository.sendAudioMessage(
@@ -76,12 +73,9 @@ class ChatController {
               receiverId: receiverId,
               sender: value!,
               ref: ref,
-              messageEnum: messageEnum,
-              messageReply: messageReply,
               isGroupChat: isGroupChat,
               audioMetadata: metadata,
             ));
-    ref.read(messageReplyProvider.state).update((state) => null);
   }
 
   void sendGifMessage(

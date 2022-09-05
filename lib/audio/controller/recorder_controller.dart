@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:audio_session/audio_session.dart';
 import 'package:bbk_final_ana/audio/enums/recorder_enum.dart';
-import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:bbk_final_ana/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,6 +36,8 @@ class RecorderController {
   final currentAudioMetadataNotifier = CurrentAudioMetadataNotifier();
   FlutterSoundRecorder? _recorder;
   FlutterSoundPlayer? _player;
+  StreamSubscription? _recorderSubscription;
+  StreamSubscription? _playerSubscription;
 
   void initRecorder(BuildContext context) async {
     _recorder = FlutterSoundRecorder();
@@ -84,22 +87,38 @@ class RecorderController {
   }
 
   void _listenToRecorderProgress() {
-    _recorder!.onProgress!.listen((record) {
+    _recorderSubscription = _recorder!.onProgress!.listen((record) {
       progressNotifier.value =
           RecorderProgressState(maxDuration: record.duration);
     });
   }
 
+  void _cancelRecorderSubscription() {
+    if (_recorderSubscription != null) {
+      _recorderSubscription!.cancel();
+      _recorderSubscription = null;
+    }
+  }
+
+  void _cancelPlayerSubscriptions() {
+    if (_playerSubscription != null) {
+      _playerSubscription!.cancel();
+      _playerSubscription = null;
+    }
+  }
+
   void _listenToPlayerProgress() {
-    _player!.onProgress!.listen((record) {
+    _playerSubscription = _player!.onProgress!.listen((record) {
       progressNotifier.value =
           RecorderProgressState(maxDuration: record.position);
     });
   }
 
   void disposeRecorder() {
+    _cancelRecorderSubscription();
     _recorder!.closeRecorder();
     _recorder = null;
+    _cancelPlayerSubscriptions();
     _player!.closePlayer();
     _player = null;
     recordButtonNotifier.value = RecorderStateEnum.notInitialized;
@@ -113,23 +132,30 @@ class RecorderController {
     const codec = Codec.aacADTS;
     currentAudioMetadataNotifier.value = AudioMetadata(
       id: audioId,
-      author: '',
-      title: '',
-      artUrl: '',
-      url: '',
+      author: 'Author placeholder',
+      title: 'Title placeholder',
+      artUrl: 'artUrl placeholder',
+      url: path,
       senderId: auth.currentUser!.uid,
       timeSent: DateTime.now(),
+      isFavorite: false,
+      isSeen: false,
     );
     recordButtonNotifier.value = RecorderStateEnum.recording;
     await _recorder!.startRecorder(
       toFile: path,
       codec: codec,
       audioSource: audioSource,
+      bitRate: 8000,
+      numChannels: 1,
+      sampleRate: 8000,
     );
   }
 
-  void stop() async {
-    final audioUrl = await _recorder!.stopRecorder();
+  void stopRecorder() async {
+    // This delay is to ensure the last second is captured by the recorder.
+    await Future.delayed(const Duration(seconds: 1));
+    await _recorder!.stopRecorder();
     recordButtonNotifier.value = RecorderStateEnum.recorded;
     final audioMetadata = currentAudioMetadataNotifier.value;
     currentAudioMetadataNotifier.value = AudioMetadata(
@@ -137,9 +163,11 @@ class RecorderController {
       author: audioMetadata.author,
       title: audioMetadata.title,
       artUrl: audioMetadata.artUrl,
-      url: audioUrl ?? '',
+      url: audioMetadata.url,
       senderId: audioMetadata.senderId,
       timeSent: audioMetadata.timeSent,
+      isFavorite: audioMetadata.isFavorite,
+      isSeen: audioMetadata.isSeen,
     );
     recordButtonNotifier.value = RecorderStateEnum.recorded;
   }
@@ -166,11 +194,11 @@ class RecorderController {
     await _player!.pausePlayer();
   }
 
-  void sendRecording({
+  void sendRecordingData({
     required String title,
     required String author,
     required String artUrl,
-  }) async {
+  }) {
     if (recordButtonNotifier.value != RecorderStateEnum.recorded) return;
     final audioMetadata = currentAudioMetadataNotifier.value;
     currentAudioMetadataNotifier.value = AudioMetadata(
@@ -178,10 +206,9 @@ class RecorderController {
       author: author,
       title: title,
       artUrl: artUrl,
-      url: audioMetadata.artUrl,
+      url: audioMetadata.url,
       senderId: audioMetadata.senderId,
       timeSent: DateTime.now(),
     );
-    //TODO
   }
 }
