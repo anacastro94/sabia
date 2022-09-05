@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:audio_session/audio_session.dart';
+import 'package:bbk_final_ana/audio/controller/recorded_audio_handler.dart';
 import 'package:bbk_final_ana/audio/enums/recorder_enum.dart';
-import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:bbk_final_ana/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,18 +19,24 @@ import '../notifiers/recoder_progess_notifier.dart';
 import '../notifiers/record_button_notifier.dart';
 import '../notifiers/recorder_progress_state.dart';
 
-final recorderControllerProvider = Provider((ref) => RecorderController(
-      ref: ref,
-      auth: FirebaseAuth.instance,
-    ));
+final recorderControllerProvider = Provider((ref) {
+  final recordedAudioHandler = ref.watch(recordedAudioHandlerProvider);
+  return RecorderController(
+    ref: ref,
+    auth: FirebaseAuth.instance,
+    recordedAudioHandler: recordedAudioHandler,
+  );
+});
 
 class RecorderController {
   RecorderController({
     required this.ref,
     required this.auth,
+    required this.recordedAudioHandler,
   });
   final ProviderRef ref;
   final FirebaseAuth auth;
+  final RecordedAudioHandler recordedAudioHandler;
   final recordButtonNotifier = RecordButtonNotifier();
   final progressNotifier = RecorderProgressNotifier();
   final currentAudioMetadataNotifier = CurrentAudioMetadataNotifier();
@@ -130,16 +136,11 @@ class RecorderController {
     final path = '${documentDirectory.path}/$audioId.aac';
     const audioSource = flutter_sound.AudioSource.microphone;
     const codec = Codec.aacADTS;
-    currentAudioMetadataNotifier.value = AudioMetadata(
+    recordedAudioHandler.clear();
+    recordedAudioHandler.updateAudioMetadata(
       id: audioId,
-      author: 'Author placeholder',
-      title: 'Title placeholder',
-      artUrl: 'artUrl placeholder',
       url: path,
       senderId: auth.currentUser!.uid,
-      timeSent: DateTime.now(),
-      isFavorite: false,
-      isSeen: false,
     );
     recordButtonNotifier.value = RecorderStateEnum.recording;
     await _recorder!.startRecorder(
@@ -157,19 +158,6 @@ class RecorderController {
     await Future.delayed(const Duration(seconds: 1));
     await _recorder!.stopRecorder();
     recordButtonNotifier.value = RecorderStateEnum.recorded;
-    final audioMetadata = currentAudioMetadataNotifier.value;
-    currentAudioMetadataNotifier.value = AudioMetadata(
-      id: audioMetadata.id,
-      author: audioMetadata.author,
-      title: audioMetadata.title,
-      artUrl: audioMetadata.artUrl,
-      url: audioMetadata.url,
-      senderId: audioMetadata.senderId,
-      timeSent: audioMetadata.timeSent,
-      isFavorite: audioMetadata.isFavorite,
-      isSeen: audioMetadata.isSeen,
-    );
-    recordButtonNotifier.value = RecorderStateEnum.recorded;
   }
 
   void restart() {
@@ -181,8 +169,9 @@ class RecorderController {
   void playRecord() async {
     if (recordButtonNotifier.value != RecorderStateEnum.recorded) return;
     recordButtonNotifier.value = RecorderStateEnum.playingPlayback;
+    final url = recordedAudioHandler.audioMetadata.url;
     await _player!.startPlayer(
-        fromURI: currentAudioMetadataNotifier.value.url,
+        fromURI: url,
         whenFinished: () {
           recordButtonNotifier.value = RecorderStateEnum.recorded;
         });
@@ -192,23 +181,5 @@ class RecorderController {
     if (recordButtonNotifier.value != RecorderStateEnum.playingPlayback) return;
     recordButtonNotifier.value = RecorderStateEnum.recorded;
     await _player!.pausePlayer();
-  }
-
-  void sendRecordingData({
-    required String title,
-    required String author,
-    required String artUrl,
-  }) {
-    if (recordButtonNotifier.value != RecorderStateEnum.recorded) return;
-    final audioMetadata = currentAudioMetadataNotifier.value;
-    currentAudioMetadataNotifier.value = AudioMetadata(
-      id: audioMetadata.id,
-      author: author,
-      title: title,
-      artUrl: artUrl,
-      url: audioMetadata.url,
-      senderId: audioMetadata.senderId,
-      timeSent: DateTime.now(),
-    );
   }
 }

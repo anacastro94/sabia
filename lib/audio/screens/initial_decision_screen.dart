@@ -1,4 +1,5 @@
 import 'package:bbk_final_ana/audio/screens/library_screen.dart';
+import 'package:bbk_final_ana/audio/screens/recorder_screen.dart';
 import 'package:bbk_final_ana/common/widgets/screen_basic_structure.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,10 @@ class InitialDecisionScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 60.0),
             const Text(
               'What would you like to do today?',
               textAlign: TextAlign.center,
@@ -33,23 +35,26 @@ class InitialDecisionScreen extends StatelessWidget {
                 fontFamily: 'DancingScript',
               ),
             ),
-            const SizedBox(height: 24.0),
             Column(
               children: [
                 RoundedButtonPrimary(
                   title: 'Listen to a story',
                   onPressed: () {
-                    Navigator.pushNamed(context, HomeScreen.id);
+                    Navigator.pushNamed(context, LibraryScreen.id);
                   },
                 ),
                 RoundedButtonSecondary(
                   title: 'Record a story',
                   onPressed: () {
-                    Navigator.pushNamed(context, LibraryScreen.id);
+                    Navigator.pushNamed(context, RecorderScreen.id);
                   },
                 ),
               ],
             ),
+            SizedBox(
+              height: 240.0,
+              child: Image.asset('assets/images/flowers_decision_screen2.png'),
+            )
           ],
         ),
       ),
