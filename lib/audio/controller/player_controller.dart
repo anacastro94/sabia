@@ -47,6 +47,7 @@ class AudioPlayerController {
     _listenToBufferedPosition();
     _listenToTotalDuration();
     _listenToChangesInAudio();
+    _listenToChangesInPlaylistRepository();
   }
 
   Future<void> _loadPlaylist() async {
@@ -180,6 +181,12 @@ class AudioPlayerController {
             mediaItem?.extras?['timeSent'] ?? 0),
       );
       _updateSkipButtons();
+    });
+  }
+
+  void _listenToChangesInPlaylistRepository() {
+    playlistRepository.getAudioMessagesStream().listen((event) {
+      _loadPlaylist();
     });
   }
 

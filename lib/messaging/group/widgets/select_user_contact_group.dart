@@ -47,35 +47,39 @@ class _SelectContactsGroupState extends ConsumerState<SelectUserContactsGroup> {
                       onTap: () => selectContact(index, userContact),
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 3.0),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0)),
-                          tileColor: Colors.white.withOpacity(0.2),
-                          title: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: kAntiqueWhite,
-                                backgroundImage:
-                                    NetworkImage(userContact.profilePicture),
-                                radius: 18.0,
-                              ),
-                              const SizedBox(width: 12.0),
-                              Text(
-                                userContact.name,
-                                style: const TextStyle(
-                                    fontSize: 18.0, color: kBlackOlive),
-                              ),
-                            ],
-                          ),
-                          leading: selectedContactsIndex.contains(index)
-                              ? const Icon(
-                                  Icons.check_circle,
-                                  color: kDarkOrange,
-                                )
-                              : const Icon(
-                                  Icons.radio_button_unchecked,
-                                  color: kDarkOrange,
+                        child: Material(
+                          elevation: 5.0,
+                          color: kAntiqueWhite,
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
+                            tileColor: Colors.white.withOpacity(0.2),
+                            title: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: kAntiqueWhite,
+                                  backgroundImage:
+                                      NetworkImage(userContact.profilePicture),
+                                  radius: 18.0,
                                 ),
+                                const SizedBox(width: 12.0),
+                                Text(
+                                  userContact.name,
+                                  style: const TextStyle(
+                                      fontSize: 18.0, color: kBlackOlive),
+                                ),
+                              ],
+                            ),
+                            leading: selectedContactsIndex.contains(index)
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: kBlackOlive,
+                                  )
+                                : const Icon(
+                                    Icons.radio_button_unchecked,
+                                    color: kBlackOlive,
+                                  ),
+                          ),
                         ),
                       ),
                     );

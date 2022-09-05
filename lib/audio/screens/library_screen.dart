@@ -379,9 +379,10 @@ class LibraryMainTitle extends StatelessWidget {
         title,
         textAlign: TextAlign.start,
         style: const TextStyle(
-          fontSize: 24.0,
+          fontSize: 30.0,
           fontWeight: FontWeight.w400,
           color: kBlackOlive,
+          fontFamily: 'DancingScript',
         ),
       ),
     );

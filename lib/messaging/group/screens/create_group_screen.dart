@@ -61,60 +61,78 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: 24.0,
-          ),
-          Stack(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              image == null
-                  ? const CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/logo.png'),
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
-                    )
-                  : CircleAvatar(
-                      backgroundImage: FileImage(image!),
-                      radius: 60.0,
-                      backgroundColor: kAntiqueWhite,
+              const SizedBox(
+                height: 24.0,
+              ),
+              Stack(
+                children: [
+                  image == null
+                      ? const CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/logo.png'),
+                          radius: 60.0,
+                          backgroundColor: kAntiqueWhite,
+                        )
+                      : CircleAvatar(
+                          backgroundImage: FileImage(image!),
+                          radius: 60.0,
+                          backgroundColor: kAntiqueWhite,
+                        ),
+                  Positioned(
+                    bottom: -12.0,
+                    left: 66.0,
+                    child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(
+                        Icons.add_a_photo,
+                        color: kAntiqueWhite,
+                      ),
                     ),
-              Positioned(
-                bottom: -12.0,
-                left: 66.0,
-                child: IconButton(
-                  onPressed: selectImage,
-                  icon: const Icon(
-                    Icons.add_a_photo,
-                    color: kAntiqueWhite,
                   ),
+                ],
+              ),
+              const SizedBox(
+                height: 24.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: TextField(
+                  controller: groupNameController,
+                  decoration: kTextFieldDecoration.copyWith(
+                      hintText: 'Enter group name'),
                 ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: TextField(
-              controller: groupNameController,
-              decoration:
-                  kTextFieldDecoration.copyWith(hintText: 'Enter group name'),
-            ),
-          ),
           Container(
             alignment: Alignment.topLeft,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-            child: const Text(
-              'Select contacts',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700,
-                color: kAntiqueWhite,
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 36.0,
+                  child: Image.asset('assets/images/title_decoration_letf.png'),
+                ),
+                const Text(
+                  'Select contacts',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w700,
+                    color: kBlackOlive,
+                    fontFamily: 'DancingScript',
+                  ),
+                ),
+                SizedBox(
+                  height: 36.0,
+                  child:
+                      Image.asset('assets/images/title_decoration_right.png'),
+                ),
+              ],
             ),
           ),
           const SelectUserContactsGroup(),

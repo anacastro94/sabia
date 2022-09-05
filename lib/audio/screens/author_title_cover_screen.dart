@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/widgets/field_title.dart';
 import '../controller/recorded_audio_handler.dart';
 
 class AuthorTitleCoverScreen extends ConsumerStatefulWidget {
@@ -207,29 +208,6 @@ class _AuthorTitleCoverScreenState
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class FieldTitle extends StatelessWidget {
-  const FieldTitle({
-    Key? key,
-    required this.title,
-    this.fontColor = kBlackOlive,
-  }) : super(key: key);
-  final String title;
-  final Color fontColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      textAlign: TextAlign.start,
-      style: TextStyle(
-        fontFamily: 'DancingScript',
-        fontSize: 30.0,
-        color: fontColor,
       ),
     );
   }
