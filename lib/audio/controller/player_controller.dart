@@ -87,7 +87,7 @@ class AudioPlayerController {
         final newList = playlist.map((mediaItem) {
           return AudioMetadata(
             author: mediaItem.artist ?? '',
-            title: mediaItem.title ?? '',
+            title: mediaItem.title,
             artUrl: mediaItem.artUri?.path ?? '',
             id: mediaItem.id,
             url: mediaItem.extras?['url'] ?? '',
@@ -184,6 +184,7 @@ class AudioPlayerController {
     });
   }
 
+  ///Reloads the playlist every time a new audio is received
   void _listenToChangesInPlaylistRepository() {
     playlistRepository.getAudioMessagesStream().listen((event) {
       _loadPlaylist();

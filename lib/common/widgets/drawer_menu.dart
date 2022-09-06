@@ -3,13 +3,12 @@ import 'dart:io';
 import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/common/widgets/standar_circular_profile_avatar.dart';
-import 'package:bbk_final_ana/common/widgets/standard_circular_progress_indicator.dart';
 import 'package:bbk_final_ana/messaging/conversations/screens/conversations_screen.dart';
 import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../audio/screens/recorder_screen.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../auth/screens/edit_user_info_screen.dart';
 import '../../models/user_model.dart';
@@ -36,12 +35,20 @@ class DrawerMenu extends ConsumerWidget {
         children: [
           const StandardDrawerHeader(),
           ListTile(
-            leading: const Icon(Icons.menu_book_outlined),
+            leading: const Icon(Icons.menu_book),
             title: const Text(
               'Library',
               style: kTextStyleMenuItem,
             ),
             onTap: () => Navigator.pushNamed(context, LibraryScreen.id),
+          ),
+          ListTile(
+            leading: const Icon(Icons.mic),
+            title: const Text(
+              'Record story',
+              style: kTextStyleMenuItem,
+            ),
+            onTap: () => Navigator.pushNamed(context, RecorderScreen.id),
           ),
           ListTile(
             leading: const Icon(Icons.comment),

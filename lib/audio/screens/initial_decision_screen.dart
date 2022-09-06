@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../common/widgets/rounded_button_primary.dart';
 import '../../common/widgets/rounded_button_secondary.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
-import '../../screens/home_screen.dart';
 
 class InitialDecisionScreen extends StatelessWidget {
   const InitialDecisionScreen({Key? key}) : super(key: key);
@@ -51,9 +50,12 @@ class InitialDecisionScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: 240.0,
-              child: Image.asset('assets/images/flowers_decision_screen2.png'),
+            Flexible(
+              child: SizedBox(
+                height: 240.0,
+                child:
+                    Image.asset('assets/images/flowers_decision_screen2.png'),
+              ),
             )
           ],
         ),

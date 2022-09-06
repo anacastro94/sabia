@@ -11,7 +11,7 @@ import '../../common/constants/constants.dart';
 import '../../common/widgets/field_title.dart';
 import '../../messaging/chat/controller/chat_controller.dart';
 import '../../messaging/group/widgets/select_user_contact_group.dart';
-import 'initial_decision_screen.dart';
+
 import 'library_screen.dart';
 
 class SendToScreen extends ConsumerWidget {
@@ -40,7 +40,8 @@ class SendToScreen extends ConsumerWidget {
               metadata: recordedAudioHandler.audioMetadata);
         }
         ref.read(selectedGroupUserContacts.state).update((state) => []);
-        Navigator.pushNamed(context, LibraryScreen.id);
+        Navigator.pushNamedAndRemoveUntil(
+            context, LibraryScreen.id, (route) => false);
       } catch (e) {
         showSnackBar(context: context, content: e.toString());
       }
