@@ -1,4 +1,3 @@
-import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/models/audio_metadata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +15,6 @@ final playListRepositoryProvider = Provider<PlaylistRepository>((ref) {
 
 abstract class PlaylistRepository {
   Future<List<AudioMetadata>> fetchInitialPlaylist();
-  Future<AudioMetadata> fetchAnotherAudio();
   void toggleAudioMessageFavorite({
     required BuildContext context,
     required String senderId,
@@ -62,28 +60,6 @@ class AudioRepository extends PlaylistRepository {
     return playlist.toList();
   }
 
-  // TODO: Update from here below
-  @override
-  Future<AudioMetadata> fetchAnotherAudio() async {
-    return _nextAudio();
-  }
-
-  int _audioIndex = 0;
-  static const _maxAudioNumber = 11;
-  AudioMetadata _nextAudio() {
-    // TODO: Get from database
-    _audioIndex = (_audioIndex % _maxAudioNumber) + 1;
-    return AudioMetadata(
-        id: _audioIndex.toString().padLeft(3, '0'),
-        author: 'SoundHelix',
-        title: 'Song $_audioIndex',
-        artUrl: kArtworkUrls[_audioIndex],
-        url:
-            'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-$_audioIndex.mp3',
-        senderId: 'senderId',
-        timeSent: DateTime.now());
-  }
-
   /// Function to toggle the isFavorite of the audio message.
   /// Only the current user as receiver of the message can toggle.
   /// Still, the message will be update for the sender and receiver.
@@ -94,7 +70,6 @@ class AudioRepository extends PlaylistRepository {
     required String messageId,
   }) async {
     try {
-      // TODO: Test
       final audioData = await firestore
           .collection('users')
           .doc(auth.currentUser!.uid)

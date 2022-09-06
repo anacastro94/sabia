@@ -4,7 +4,6 @@ import 'package:bbk_final_ana/landing/screens/welcome_screen.dart';
 import 'package:bbk_final_ana/messaging/chat/screens/chat_screen.dart';
 import 'package:bbk_final_ana/messaging/conversations/screens/conversations_screen.dart';
 import 'package:bbk_final_ana/messaging/group/screens/create_group_screen.dart';
-import 'package:bbk_final_ana/screens/home_screen.dart';
 import 'package:bbk_final_ana/audio/screens/initial_decision_screen.dart';
 import 'package:bbk_final_ana/auth/screens/user_info_screen.dart';
 
@@ -82,9 +81,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ConversationsScreen.id:
       return MaterialPageRoute(
           builder: (context) => const ConversationsScreen());
-
-    case HomeScreen.id:
-      return MaterialPageRoute(builder: (context) => const HomeScreen());
 
     default:
       return MaterialPageRoute(

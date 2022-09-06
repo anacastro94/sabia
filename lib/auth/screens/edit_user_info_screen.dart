@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bbk_final_ana/audio/screens/library_screen.dart';
 import 'package:bbk_final_ana/auth/controller/auth_controller.dart';
 import 'package:bbk_final_ana/common/constants/constants.dart';
 import 'package:bbk_final_ana/models/user_model.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/widgets/circular_cached_network_image.dart';
 import '../../common/widgets/screen_basic_structure.dart';
 import '../../common/widgets/standar_circular_profile_avatar.dart';
-import '../../screens/home_screen.dart';
 
 class EditUserInformationScreen extends ConsumerStatefulWidget {
   const EditUserInformationScreen({Key? key}) : super(key: key);
@@ -62,10 +62,8 @@ class _EditUserInformationScreenState
       toggleEditingMode();
       image = null;
       if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, LibraryScreen.id, (route) => false);
     }
   }
 
@@ -149,7 +147,11 @@ class _EditUserInformationScreenState
                       icon: Icon(isEditing ? Icons.done : Icons.edit),
                     ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 240.0,
+                  child: Image.asset('assets/images/bottom_decoration3.png'),
+                ),
               ],
             ),
           ],

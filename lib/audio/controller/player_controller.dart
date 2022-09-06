@@ -238,33 +238,6 @@ class AudioPlayerController {
     }
   }
 
-  ///Not working
-  void addAudioToPlaylist() async {
-    final playlistRepository = ref.read(playListRepositoryProvider);
-    final audio = await playlistRepository.fetchAnotherAudio();
-    final mediaItem = MediaItem(
-      id: audio.id,
-      title: audio.title,
-      artist: audio.author,
-      artUri: Uri.parse(audio.artUrl),
-      extras: {
-        'url': audio.url,
-        'isFavorite': audio.isFavorite,
-        'isSeen': audio.isSeen,
-        'senderId': audio.senderId,
-        'timeSent': audio.timeSent.millisecondsSinceEpoch,
-      },
-    );
-    _audioHandler.addQueueItem(mediaItem);
-  }
-
-  ///Not being used
-  void removeAudioFromPlaylist(int index) {
-    final lastIndex = _audioHandler.queue.value.length - 1;
-    if (lastIndex < 0) return;
-    _audioHandler.removeQueueItemAt(index);
-  }
-
   void skipToQueueItem(int index) {
     _audioHandler.skipToQueueItem(index);
   }

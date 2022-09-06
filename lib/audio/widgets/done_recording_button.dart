@@ -24,17 +24,6 @@ class DoneRecordingButton extends ConsumerWidget {
       return () {
         recorderController.restart();
         Navigator.pushNamed(context, AuthorTitleCoverScreen.id);
-
-        //TODO: Move to send to screen
-        // final audioMetadata =
-        //     recorderController.currentAudioMetadataNotifier.value;
-        // final audioFile = File.fromUri(Uri.parse(audioMetadata.url));
-        // chatController.sendAudioMessage(
-        //     context: context,
-        //     audioFile: audioFile,
-        //     receiverId: '400HEskT5ARdIvCUGsIriEiaqA22',
-        //     isGroupChat: false,
-        //     metadata: audioMetadata);
       };
     }
 
