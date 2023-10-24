@@ -18,37 +18,38 @@ The second is social: Thinking about this issue, I realized that it was not just
 The third is political: The president of Brazil at the time of writing this text is Jair Bolsonaro, an extreme right-wing politician who has ruled the country since 2019. The extreme right has taken possession of national symbols such as the flag, the colors green and yellow and the football team shirt. But there was still a national symbol that remained intact to this illegitimate appropriation: the Sabiá. Sabiá, in Tupi, a Brazilian indigenous language, means the one who prays a lot and is the bird symbol of my country.
 A famous poem puts this bird as one of the main nostalgias of a Brazilian in foreign lands. For clarification, the poem makes more sense in Portuguese because it rhymes. 
 
-_Exile song
+*Exile song*
 
-My land has palm trees
-Where the Sabiá sings,
-The birds that chirp here,
-They don't chirp like there.
+*My land has palm trees  
+Where the Sabiá sings,  
+The birds that chirp here,  
+They don't chirp like there.*
 
-Our sky has more stars,
-Our floodplains have more flowers,
-Our woods have more life,
-Our life more loves.
+*Our sky has more stars,  
+Our floodplains have more flowers,  
+Our woods have more life,  
+Our life more loves.*
 
-In brooding, alone, at night,
-More pleasure I find there;
-My land has palm trees,
-Where the Sabiá sings.
+*In brooding, alone, at night,  
+More pleasure I find there;  
+My land has palm trees,  
+Where the Sabiá sings.*
 
-My land has primes,
-What such I can't find here;
-In brooding – alone, at night –
-More pleasure I find there;
-My land has palm trees,
-Where the Sabiá sings.
+*My land has primes,  
+What such I can't find here;  
+In brooding – alone, at night –  
+More pleasure I find there;  
+My land has palm trees,  
+Where the Sabiá sings.*
 
-God doesn't allow me to die,
-Without my going back there;
-Without enjoying the primes
-That I can't find around here;
-Without ever seeing the palm trees,
-Where the Sabiá sings.
+*God doesn't allow me to die,  
+Without my going back there;  
+Without enjoying the primes  
+That I can't find around here;  
+Without ever seeing the palm trees,  
+Where the Sabiá sings.*
 
-Gonçalves Dias_
+*Gonçalves Dias*
+
 
 In short, Sabiá is a technical creation but also a social, political, and personal one. And as a developer, I hope it can represent hope for a more humane world, a more democratic Brazil and more integrated older individuals, including my grandmother.
